@@ -3,7 +3,9 @@ package br.com.arch.toolkit.android.statemachine
 /**
  * Auto start Machine
  */
-inline fun <STATE : StateMachine.State> StateMachine<STATE>.setup(func: StateMachine<STATE>.() -> Unit) {
+inline fun <STATE : StateMachine.State> StateMachine<STATE>.setup(
+    func: StateMachine<STATE>.() -> Unit
+) {
     apply(func)
     start()
 }
@@ -11,7 +13,9 @@ inline fun <STATE : StateMachine.State> StateMachine<STATE>.setup(func: StateMac
 /**
  * Change the default configuration
  */
-inline fun <STATE : StateMachine.State> StateMachine<STATE>.config(configuration: StateMachine.Config.() -> Unit) =
+inline fun <STATE : StateMachine.State> StateMachine<STATE>.config(
+    configuration: StateMachine.Config.() -> Unit
+) =
     config.run(configuration)
 
 /**

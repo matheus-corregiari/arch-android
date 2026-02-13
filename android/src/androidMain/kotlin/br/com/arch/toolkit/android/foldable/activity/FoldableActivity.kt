@@ -8,8 +8,8 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.window.layout.FoldingFeature
-import br.com.arch.toolkit.android.delegate.viewProvider
 import br.com.arch.toolkit.android.R
+import br.com.arch.toolkit.android.delegate.viewProvider
 import br.com.arch.toolkit.android.foldable.extension.handleFoldableStateChange
 
 abstract class FoldableActivity : AppCompatActivity(R.layout.activity_foldable) {

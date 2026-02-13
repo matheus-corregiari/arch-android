@@ -75,9 +75,7 @@ class StickyHeadersLinearLayoutManager<T> :
     /**
      * Returns true if `view` is the current sticky header.
      */
-    fun isStickyHeader(view: View): Boolean {
-        return view === mStickyHeader
-    }
+    fun isStickyHeader(view: View): Boolean = view === mStickyHeader
 
     override fun onAttachedToWindow(view: RecyclerView?) {
         super.onAttachedToWindow(view)
@@ -398,42 +396,45 @@ class StickyHeadersLinearLayoutManager<T> :
     /**
      * Returns true when `view` is a valid anchor, ie. the first view to be valid and visible.
      */
-    private fun isViewValidAnchor(view: View?, params: RecyclerView.LayoutParams?): Boolean {
-        return if (view != null && params != null && !params.isItemRemoved && !params.isViewInvalid) {
-            if (orientation == RecyclerView.VERTICAL) {
-                if (reverseLayout) {
-                    view.top + view.translationY <= height + mTranslationY
-                } else {
-                    view.bottom - view.translationY >= mTranslationY
-                }
+    private fun isViewValidAnchor(
+        view: View?,
+        params: RecyclerView.LayoutParams?
+    ): Boolean = if (view != null &&
+        params != null &&
+        !params.isItemRemoved &&
+        !params.isViewInvalid
+    ) {
+        if (orientation == RecyclerView.VERTICAL) {
+            if (reverseLayout) {
+                view.top + view.translationY <= height + mTranslationY
             } else {
-                if (reverseLayout) {
-                    view.left + view.translationX <= width + mTranslationX
-                } else {
-                    view.right - view.translationX >= mTranslationX
-                }
+                view.bottom - view.translationY >= mTranslationY
             }
         } else {
-            false
+            if (reverseLayout) {
+                view.left + view.translationX <= width + mTranslationX
+            } else {
+                view.right - view.translationX >= mTranslationX
+            }
         }
+    } else {
+        false
     }
 
     /**
      * Returns true when the `view` is at the edge of the parent [RecyclerView].
      */
-    private fun isViewOnBoundary(view: View): Boolean {
-        return if (orientation == RecyclerView.VERTICAL) {
-            if (reverseLayout) {
-                view.bottom - view.translationY > height + mTranslationY
-            } else {
-                view.top + view.translationY < mTranslationY
-            }
+    private fun isViewOnBoundary(view: View): Boolean = if (orientation == RecyclerView.VERTICAL) {
+        if (reverseLayout) {
+            view.bottom - view.translationY > height + mTranslationY
         } else {
-            if (reverseLayout) {
-                view.right - view.translationX > width + mTranslationX
-            } else {
-                view.left + view.translationX < mTranslationX
-            }
+            view.top + view.translationY < mTranslationY
+        }
+    } else {
+        if (reverseLayout) {
+            view.right - view.translationX > width + mTranslationX
+        } else {
+            view.left + view.translationX < mTranslationX
         }
     }
 
@@ -441,46 +442,48 @@ class StickyHeadersLinearLayoutManager<T> :
      * Returns the position in the Y axis to position the header appropriately, depending on orientation, direction and
      * [android.R.attr.clipToPadding].
      */
-    private fun getY(headerView: View, nextHeaderView: View?): Float {
-        return if (orientation == RecyclerView.VERTICAL) {
-            var y = mTranslationY
+    private fun getY(
+        headerView: View,
+        nextHeaderView: View?
+    ): Float = if (orientation == RecyclerView.VERTICAL) {
+        var y = mTranslationY
 
-            if (reverseLayout) y += height - headerView.height
-            nextHeaderView?.let {
-                y = if (reverseLayout) {
-                    max(it.bottom.toFloat(), y)
-                } else {
-                    min((it.top - headerView.height).toFloat(), y)
-                }
+        if (reverseLayout) y += height - headerView.height
+        nextHeaderView?.let {
+            y = if (reverseLayout) {
+                max(it.bottom.toFloat(), y)
+            } else {
+                min((it.top - headerView.height).toFloat(), y)
             }
-
-            y
-        } else {
-            mTranslationY
         }
+
+        y
+    } else {
+        mTranslationY
     }
 
     /**
      * Returns the position in the X axis to position the header appropriately, depending on orientation, direction and
      * [android.R.attr.clipToPadding].
      */
-    private fun getX(headerView: View, nextHeaderView: View?): Float {
-        return if (orientation != RecyclerView.VERTICAL) {
-            var x = mTranslationX
+    private fun getX(
+        headerView: View,
+        nextHeaderView: View?
+    ): Float = if (orientation != RecyclerView.VERTICAL) {
+        var x = mTranslationX
 
-            if (reverseLayout) x += width - headerView.width
-            nextHeaderView?.let {
-                x = if (reverseLayout) {
-                    max(it.right.toFloat(), x)
-                } else {
-                    min((it.left - headerView.width).toFloat(), x)
-                }
+        if (reverseLayout) x += width - headerView.width
+        nextHeaderView?.let {
+            x = if (reverseLayout) {
+                max(it.right.toFloat(), x)
+            } else {
+                min((it.left - headerView.width).toFloat(), x)
             }
-
-            x
-        } else {
-            mTranslationX
         }
+
+        x
+    } else {
+        mTranslationX
     }
 
     /**
@@ -633,7 +636,9 @@ class StickyHeadersLinearLayoutManager<T> :
                         if (headerPos >= fromPosition && headerPos < fromPosition + itemCount) {
                             mHeaderPositions[i] = headerPos - (toPosition - fromPosition)
                             sortHeaderAtIndex(i)
-                        } else if (headerPos >= fromPosition + itemCount && headerPos <= toPosition) {
+                        } else if (headerPos >= fromPosition + itemCount &&
+                            headerPos <= toPosition
+                        ) {
                             mHeaderPositions[i] = headerPos - itemCount
                             sortHeaderAtIndex(i)
                         } else {

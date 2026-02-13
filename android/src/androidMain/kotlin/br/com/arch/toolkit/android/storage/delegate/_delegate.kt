@@ -7,17 +7,17 @@ import kotlin.reflect.KClass
 
 inline fun <reified T : Any> keyValueStorage(name: String) = keyValueStorage(
     classToParse = T::class,
-    name = { name },
+    name = { name }
 )
 
 inline fun <reified T : Any> keyValueStorage(noinline name: () -> String) = keyValueStorage(
     classToParse = T::class,
-    name = name,
+    name = name
 )
 
 fun <T : Any> keyValueStorage(classToParse: KClass<out T>, name: String) = keyValueStorage(
     classToParse = classToParse,
-    name = { name },
+    name = { name }
 )
 
 fun <T : Any> keyValueStorage(classToParse: KClass<out T>, name: () -> String) =

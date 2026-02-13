@@ -11,7 +11,9 @@ import br.com.arch.toolkit.android.recyclerAdapter.stickyheader.StickyHeaders
 /**
  * Basic implementation of RecyclerView.Adapter using AsyncListDiffer and CustomViews as items
  */
-abstract class BaseRecyclerAdapter<MODEL : Any>(differ: DiffUtil.ItemCallback<MODEL> = DefaultItemDiffer()) :
+abstract class BaseRecyclerAdapter<MODEL : Any>(
+    differ: DiffUtil.ItemCallback<MODEL> = DefaultItemDiffer()
+) :
     RecyclerView.Adapter<BaseViewHolder>(), StickyHeaders {
 
     @Suppress("LeakingThis")

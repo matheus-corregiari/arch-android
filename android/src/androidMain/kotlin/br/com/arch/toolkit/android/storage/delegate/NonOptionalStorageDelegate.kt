@@ -18,7 +18,9 @@ data class NonOptionalStorageDelegate<T : Any> internal constructor(
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T = savedData
         ?: default.get().also {
-            log("[Storage] Delivering default value for field '${property.name}': \n\t Value -> $it")
+            log(
+                "[Storage] Delivering default value for field '${property.name}': \n\t Value -> $it"
+            )
         }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {

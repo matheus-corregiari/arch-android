@@ -52,7 +52,9 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
                 else -> {
                     val json = get<String>(name)?.takeIf { it.isNotBlank() } ?: return null
                     val parser = Storage.Settings.complexDataParser
-                        ?: error("Please set a ComplexDataParser into Storage.Settings.setComplexDataParser")
+                        ?: error(
+                            "Please set a ComplexDataParser into Storage.Settings.setComplexDataParser"
+                        )
                     parser.fromJson(json, classToParse)
                 }
             }
@@ -95,7 +97,9 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
                         /* Call custom parser to transform data into json to save it */
                         else -> {
                             val parser = Storage.Settings.complexDataParser
-                                ?: error("Please set a ComplexDataParser into Storage.Settings.setComplexDataParser")
+                                ?: error(
+                                    "Please set a ComplexDataParser into Storage.Settings.setComplexDataParser"
+                                )
                             set(name, parser.toJson(value).takeIf { it.isNotBlank() })
                         }
                     }

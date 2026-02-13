@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 class ObservableValue<T>(
     initialValue: T,
     private val getter: () -> T?,
-    private val setter: ((T?) -> Unit)? = null,
+    private val setter: ((T?) -> Unit)? = null
 ) {
     private val job = SupervisorJob()
     private val scope = CoroutineScope(job + Dispatchers.IO)

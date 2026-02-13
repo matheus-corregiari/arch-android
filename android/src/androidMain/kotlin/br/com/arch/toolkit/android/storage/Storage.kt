@@ -15,9 +15,13 @@ sealed class Storage {
 
         val memory = MemoryStorage("default-memory")
         val encrypted: SharedPrefStorage.Encrypted
-            get() = requireNotNull(_encrypted) { "Not initialized, Be aware to call init() before use" }
+            get() = requireNotNull(
+                _encrypted
+            ) { "Not initialized, Be aware to call init() before use" }
         val regular: SharedPrefStorage.Regular
-            get() = requireNotNull(_regular) { "Not initialized, Be aware to call init() before use" }
+            get() = requireNotNull(
+                _regular
+            ) { "Not initialized, Be aware to call init() before use" }
 
         fun init(context: Context) {
             _encrypted = SharedPrefStorage.Encrypted(context, "default-encrypted")

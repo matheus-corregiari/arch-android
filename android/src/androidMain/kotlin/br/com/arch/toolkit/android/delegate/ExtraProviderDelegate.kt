@@ -88,7 +88,9 @@ class ExtraProviderDelegate<T>(
 }
 
 enum class ExtraType {
-    ARGUMENT, QUERY, AUTO
+    ARGUMENT,
+    QUERY,
+    AUTO
 }
 
 fun <T> extraProvider(extra: String) = extraProvider<T?>(extra, true)

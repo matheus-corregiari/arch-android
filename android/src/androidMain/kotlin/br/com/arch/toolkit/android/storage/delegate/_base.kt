@@ -1,19 +1,25 @@
 package br.com.arch.toolkit.android.storage.delegate
 
-import br.com.arch.toolkit.lumber.Lumber
 import br.com.arch.toolkit.android.storage.keyValue.KeyValueStorage
+import br.com.arch.toolkit.lumber.Lumber
 
 internal fun (() -> String).get() = runCatching { invoke().takeIf { it.isNotBlank() } }
     .onFailure {
-        Lumber.tag("Storage Delegate").error(it, "[Storage] Failed to get name for key value storage")
+        Lumber.tag(
+            "Storage Delegate"
+        ).error(it, "[Storage] Failed to get name for key value storage")
     }.getOrNull()
 
 internal fun (() -> KeyValueStorage).get() = runCatching { invoke() }.onFailure {
-    Lumber.tag("Storage Delegate").error(it, "[Storage] Failed to get storage for key value storage")
+    Lumber.tag(
+        "Storage Delegate"
+    ).error(it, "[Storage] Failed to get storage for key value storage")
 }.getOrNull()
 
 internal fun <T : Any> (() -> T).get() = runCatching { invoke() }.onFailure {
-    Lumber.tag("Storage Delegate").error(it, "[Storage] Failed to get default for key value storage")
+    Lumber.tag(
+        "Storage Delegate"
+    ).error(it, "[Storage] Failed to get default for key value storage")
 }.getOrThrow()
 
 sealed class StorageDelegate<T : Any> {

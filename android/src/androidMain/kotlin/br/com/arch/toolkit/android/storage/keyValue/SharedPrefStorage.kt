@@ -6,11 +6,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import br.com.arch.toolkit.lumber.Lumber
 import br.com.arch.toolkit.android.storage.StorageType
 import br.com.arch.toolkit.android.util.edit
 import br.com.arch.toolkit.android.util.get
 import br.com.arch.toolkit.android.util.set
+import br.com.arch.toolkit.lumber.Lumber
 
 /**
  * This code defines a class called SharedPrefStorage that implements an interface called KeyValueStorage.
