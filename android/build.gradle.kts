@@ -26,7 +26,13 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime)
             implementation(libs.arch.lumber)
         }
-        androidUnitTest.dependencies { implementation(libs.jetbrains.kotlin.test) }
+        commonTest.dependencies {
+            implementation(libs.robolectric.test)
+            implementation(libs.junit.test)
+            implementation(libs.jetbrains.kotlin.test)
+            implementation(libs.mockk.test.android)
+            implementation(libs.mockk.test.agent)
+        }
     }
 }
 

@@ -54,6 +54,12 @@ detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.
 ktlint = { module = "org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlint" }
 vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "vanniktech-publish" }
 
+## Test
+junit-test = { module = "junit:junit", version = "4.13.2" }
+robolectric-test = { module = "org.robolectric:robolectric", version = "4.16.1" }
+mockk-test-android = { module = "io.mockk:mockk-android", version = "1.14.9" }
+mockk-test-agent = { module = "io.mockk:mockk", version = "1.14.9" }
+
 # ------------------------------------------------------------------------------------------------ #
 [plugins]
 ## Nothing Here Yet!

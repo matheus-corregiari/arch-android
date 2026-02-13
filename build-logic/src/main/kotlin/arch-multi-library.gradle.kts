@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage", "OPT_IN_USAGE")
 
-import com.android.build.api.variant.impl.capitalizeFirstChar
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
