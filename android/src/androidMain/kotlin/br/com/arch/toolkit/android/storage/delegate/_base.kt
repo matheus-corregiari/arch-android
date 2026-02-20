@@ -22,12 +22,23 @@ internal fun <T : Any> (() -> T).get() = runCatching { invoke() }.onFailure {
     ).error(it, "[Storage] Failed to get default for key value storage")
 }.getOrThrow()
 
+/**
+ * Base class for storage delegates providing logging utilities.
+ *
+ * @param T The type of data handled by the delegate.
+ */
 sealed class StorageDelegate<T : Any> {
 
+    /**
+     * Logs an error with the "Storage Delegate" tag.
+     */
     protected fun Throwable.log(message: String) {
         Lumber.tag("Storage Delegate").error(this, message)
     }
 
+    /**
+     * Logs an info message with the "Storage Delegate" tag.
+     */
     protected fun log(message: String) {
         Lumber.tag("Storage Delegate").info(message)
     }

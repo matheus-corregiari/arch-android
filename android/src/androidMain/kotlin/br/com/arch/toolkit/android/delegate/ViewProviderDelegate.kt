@@ -12,6 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty
 
+/**
+ * A property delegate for finding and caching [View]s.
+ *
+ * It supports [AppCompatActivity], [Fragment], [View], and [RecyclerView.ViewHolder].
+ *
+ * @param T The type of the [View].
+ * @property parentRes Optional ID of a parent view to restrict the search.
+ * @property idRes The ID of the view to find.
+ * @property required If true, throws an [IllegalStateException] if the view is not found.
+ * @property viewStubAutoInflate If true and the found view is a [ViewStub], it will be automatically inflated.
+ */
 class ViewProviderDelegate<out T> internal constructor(
     @param:IdRes private val parentRes: Int = NO_ID,
     @param:IdRes private val idRes: Int,
@@ -75,6 +86,13 @@ class ViewProviderDelegate<out T> internal constructor(
     }
 }
 
+/**
+ * Creates a [ViewProviderDelegate] that expects the view to exist.
+ *
+ * @param idRes The ID of the view.
+ * @param parentRes Optional ID of a parent view.
+ * @param viewStubAutoInflate Whether to auto-inflate if it's a [ViewStub].
+ */
 fun <T : View> viewProvider(
     @IdRes idRes: Int,
     @IdRes parentRes: Int = NO_ID,
@@ -86,6 +104,13 @@ fun <T : View> viewProvider(
     viewStubAutoInflate = viewStubAutoInflate
 )
 
+/**
+ * Creates a [ViewProviderDelegate] that returns null if the view is not found.
+ *
+ * @param idRes The ID of the view.
+ * @param parentRes Optional ID of a parent view.
+ * @param viewStubAutoInflate Whether to auto-inflate if it's a [ViewStub].
+ */
 fun <T : View?> optionalViewProvider(
     @IdRes idRes: Int,
     @IdRes parentRes: Int = NO_ID,

@@ -8,6 +8,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
+/**
+ * A property delegate for optional values in [KeyValueStorage].
+ *
+ * It supports primitive types, Enums, and complex objects (via [br.com.arch.toolkit.android.storage.ComplexDataParser]).
+ * It also includes a memory cache with a [ThresholdData] mechanism.
+ *
+ * @param T The type of data to store.
+ * @property name A lambda providing the key name.
+ * @property storage A lambda providing the [KeyValueStorage] instance.
+ * @property threshold The expiration duration for the memory cache.
+ * @property classToParse The [KClass] of the data being stored.
+ */
 @ConsistentCopyVisibility
 data class OptionalStorageDelegate<T : Any> internal constructor(
     private val name: () -> String,
@@ -113,17 +125,29 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
         }
     }
 
-    //region Storage Method modifiers
+    /**
+     * Configures the [KeyValueStorage] for this delegate.
+     */
     fun storage(storage: KeyValueStorage) = storage { storage }
+
+    /**
+     * Configures the [KeyValueStorage] provider for this delegate.
+     */
     fun storage(storage: () -> KeyValueStorage) = copy(storage = storage)
-    //endregion
 
-    //region Threshold Method modifiers
+    /**
+     * Configures the expiration threshold for the memory cache.
+     */
     fun threshold(threshold: Duration) = copy(threshold = threshold)
-    //endregion
 
-    //region Required Method modifiers.
+    /**
+     * Makes this delegate non-optional by providing a default value.
+     */
     fun required(default: T) = required { default }
+
+    /**
+     * Makes this delegate non-optional by providing a default value provider.
+     */
     fun required(default: () -> T) = NonOptionalStorageDelegate<T>(
         name = name,
         default = default,
@@ -131,5 +155,4 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
         threshold = threshold,
         classToParse = classToParse
     )
-    //endregion
 }

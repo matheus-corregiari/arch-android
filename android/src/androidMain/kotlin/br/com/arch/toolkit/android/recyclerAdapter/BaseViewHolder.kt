@@ -4,6 +4,8 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Basic ViewHolder used in BaseRecyclerAdapter
+ * A basic [RecyclerView.ViewHolder] implementation used by [BaseRecyclerAdapter].
+ *
+ * @param view The root view of the item.
  */
 class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view)

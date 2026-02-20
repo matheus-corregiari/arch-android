@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.arch.toolkit.android.recyclerAdapter.stickyheader.StickyHeaders
 
 /**
- * Basic implementation of RecyclerView.Adapter using AsyncListDiffer and CustomViews as items
+ * A base implementation of [RecyclerView.Adapter] that uses [AsyncListDiffer] and [ViewBinder]
+ * for efficient list updates and simplified view binding.
+ *
+ * @param MODEL The type of data to be displayed in the list.
+ * @param differ The [DiffUtil.ItemCallback] to use for calculating list differences. Defaults to [DefaultItemDiffer].
  */
 abstract class BaseRecyclerAdapter<MODEL : Any>(
     differ: DiffUtil.ItemCallback<MODEL> = DefaultItemDiffer()
@@ -21,7 +25,7 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     private val clickMap = hashMapOf<Int, (MODEL) -> Unit>()
 
     /**
-     * Current list displayed on adapter
+     * The current list of items displayed by the adapter.
      */
     var items: List<MODEL>
         get() = listDiffer.currentList
@@ -32,12 +36,12 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     private var onItemClick: ((MODEL) -> Unit)? = null
 
     /**
-     * @param context Android Context
-     * @param viewType View Type calculated on BaseRecyclerAdapter$getItemViewType. If used along with
-     * StickyHeaders, defaults to DEFAULT_TYPE and STICKY_TYPE
+     * Creates a [ViewBinder] instance for a specific view type.
      *
-     * @return A new View instance to bind. The view must implement the ViewBinder interface
-     * @throws IllegalStateException if the ViewBinder instance returned is not a View
+     * @param context The Android [Context].
+     * @param viewType The view type identifier.
+     * @return An instance of [ViewBinder] that is also a [View].
+     * @throws IllegalStateException If the returned [ViewBinder] is not a [View].
      */
     protected abstract fun viewCreator(context: Context, viewType: Int): ViewBinder<*>
 
@@ -56,11 +60,12 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     override fun isStickyHeader(position: Int) = false
 
     /**
-     * @param holder Holder holding the Custom View implementing the ViewBinder<>
-     * @param onItemClick The Listener to be attached into the View, if null, the click is not configured
-     * @param model Model to Bind
+     * Binds the data to the [BaseViewHolder].
      *
-     * @throws IllegalStateException if the Holder View doesn't implement ViewBinder
+     * @param holder The [BaseViewHolder] to bind to.
+     * @param model The data item.
+     * @param onItemClick Optional click listener for the item.
+     * @throws IllegalStateException If the holder's view does not implement [ViewBinder].
      */
     @Suppress("UNCHECKED_CAST")
     protected open fun <T> bindHolder(
@@ -79,19 +84,19 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     }
 
     /**
-     * This method will receive a list and attach it into the adapter
+     * Updates the list of items displayed by the adapter.
      *
-     * @param newList The New List to be updated into the adapter
+     * @param newList The new list of items.
      */
     open fun setList(newList: List<MODEL>) {
         items = newList
     }
 
     /**
-     * Add a default Item Click
-     * This listener will be called when any specific listener is configured by the viewType
+     * Sets a global click listener for all items.
      *
-     * @param onItemClick The Item listener with the Model attached into the View
+     * @param onItemClick The listener to be called on item click.
+     * @return The adapter instance for chaining.
      */
     fun withListener(onItemClick: (MODEL) -> Unit): BaseRecyclerAdapter<MODEL> {
         this.onItemClick = onItemClick
@@ -99,10 +104,11 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     }
 
     /**
-     * Add a specific Item Click
-     * This listener will be called only in the click on the View by viewType
+     * Sets a click listener for a specific view type.
      *
-     * @param onItemClick The Item listener with the Model attached into the View
+     * @param itemType The view type identifier.
+     * @param onItemClick The listener to be called on item click.
+     * @return The adapter instance for chaining.
      */
     fun withListener(
         itemType: Int,
@@ -113,16 +119,16 @@ abstract class BaseRecyclerAdapter<MODEL : Any>(
     }
 
     /**
-     * Remove the first item in the list
+     * Removes an item from the list.
      *
-     * @param item Item to be removed
+     * @param item The item to remove.
      */
     open fun removeItem(item: MODEL) = setList(items.minus(item))
 
     /**
-     * Add the Item at the bottom of the list
+     * Adds an item to the end of the list.
      *
-     * @param item Item to be Added
+     * @param item The item to add.
      */
     open fun addItem(item: MODEL) = setList(items.plus(item))
 }

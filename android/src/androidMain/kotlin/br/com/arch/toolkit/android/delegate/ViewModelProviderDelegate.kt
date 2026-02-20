@@ -8,6 +8,12 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
+/**
+ * A property delegate for retrieving a [ViewModel] from [AppCompatActivity], [Fragment], [View], or [ViewHolder].
+ *
+ * @param T The type of the [ViewModel].
+ * @property kClass The class of the [ViewModel] to provide.
+ */
 class ViewModelProviderDelegate<out T : ViewModel> internal constructor(private val kClass: KClass<T>) {
 
     operator fun getValue(thisRef: AppCompatActivity, property: KProperty<*>): T =
@@ -23,7 +29,15 @@ class ViewModelProviderDelegate<out T : ViewModel> internal constructor(private 
         getValue(thisRef.itemView, property)
 }
 
+/**
+ * Creates a [ViewModelProviderDelegate] for the specified [ViewModel] type.
+ */
 inline fun <reified T : ViewModel> viewModelProvider() = viewModelProvider(T::class)
 
+/**
+ * Creates a [ViewModelProviderDelegate] for the specified [KClass].
+ *
+ * @param kClass The class of the [ViewModel].
+ */
 fun <T : ViewModel> viewModelProvider(kClass: KClass<T>) =
     ViewModelProviderDelegate(kClass = kClass)

@@ -1,291 +1,241 @@
-package br.com.arch.toolkit.android.statemachine;
+@file:Suppress("TooManyFunctions")
 
-import android.os.Bundle;
-import android.util.SparseArray;
+package br.com.arch.toolkit.android.statemachine
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.os.Bundle
+import androidx.core.os.bundleOf
 
-/**
- * Simple State machine implementation.
- * <p>
- * This implementation knows how to handle state changes of a custom State implementation
- * <p>
- * Have fun!
- */
-public abstract class StateMachine<STATE extends StateMachine.State> {
+abstract class StateMachine<STATE : StateMachine.State> {
+
+    private companion object {
+        const val STATE_MACHINE_CURRENT_KEY: String = "STATE_MACHINE_CURRENT_KEY"
+    }
 
     /**
-     * Current state key of the machine
+     * Current state key of the machine.
      */
-    private int currentStateKey = -1;
+    private var currentStateKey = -1
 
     /**
-     * Control the states configurations
+     * Map of state keys to their respective state configurations.
      */
-    private final SparseArray<STATE> stateMap = new SparseArray<>();
+    private val stateMap = mutableMapOf<Int, STATE>()
 
     /**
-     * State machine Configuration
+     * The configuration for this state machine.
      */
-    private final Config config = new Config();
+    val config = Config()
 
     /**
-     * Indicates if the machine is started or not
+     * Indicates whether the machine has been started.
      */
-    private boolean started = false;
+    var isStarted = false
+        private set
 
     /**
-     * Implementation for change from one state from another
+     * Performs the actual transition to the new state.
      *
-     * @param state The new State to became Active
+     * @param state The state to become active.
      */
-    protected abstract void performChangeState(@NonNull final STATE state);
+    protected abstract fun performChangeState(state: STATE)
 
     /**
-     * @return A new State instance
-     */
-    @NonNull
-    public abstract STATE newStateInstance();
-
-    /**
-     * @return The current configuration of the Machine
-     */
-    public final Config getConfig() {
-        return config;
-    }
-
-    /**
-     * @return The current state key
-     */
-    public final int getCurrentStateKey() {
-        return currentStateKey == -1 ? config.initialState : currentStateKey;
-    }
-
-    /**
-     * Method to start the machine with the configuration set and/or to restore the state
-     * <p>
-     * Make sure to call this method after the State machine setup
+     * Creates a new instance of the specific state type.
      *
-     * @throws IllegalStateException If the machine is already started
-     * @throws IllegalStateException If the machine tries to start with a invalid state
+     * @return A new instance of `STATE`.
      */
-    public final void start() {
-        if (started) throw new IllegalStateException("Machine already started");
-
-        started = true;
-
-        if (getCurrentStateKey() <= -1) return;
-
-        final STATE state = stateMap.get(getCurrentStateKey());
-        if (state == null) throw new IllegalStateException("State not found! " +
-                "Make sure to add all states before init the Machine");
-        changeState(getCurrentStateKey(), true);
-    }
+    abstract fun newStateInstance(): STATE
 
     /**
-     * @return true if the Machine is started, otherwise, false
-     */
-    public boolean isStarted() {
-        return started;
-    }
-
-    /**
-     * Reset the machine.
-     * <p>
-     * Remote the current state reference
-     * Restore configurations to default
-     * Set the started to false
-     * Clear the states map
-     * <p>
-     * Call when your view/activity/fragment is not available anymore
-     */
-    public void shutdown() {
-        stateMap.clear();
-        started = false;
-        currentStateKey = -1;
-        config.reset();
-    }
-
-    //region Change Current State
-
-    /**
-     * Changes the current state of the state machine
+     * Returns the key of the current state.
      *
-     * @param stateKey      The state to become active
-     * @param forceChange   If true, forces to change to the stateKey param, even if it is already the currentStateKey
-     * @param onChangeState Custom implementation for the default onChangeState
-     * @throws IllegalStateException If the machine is not started
-     * @throws IllegalStateException When it tries to change to a not valid state
+     * @return The current state key, or the initial state key if no transition has occurred.
      */
-    public final void changeState(final int stateKey, final boolean forceChange, @Nullable final OnChangeStateCallback onChangeState) {
-        if (!started)
-            throw new IllegalStateException("Call StateMachine#start() method before make any state changes");
-
-        if (stateKey == getCurrentStateKey() && !forceChange) return;
-
-        final STATE state = stateMap.get(stateKey);
-        final STATE currentState = stateMap.get(getCurrentStateKey());
-
-        if (state == null)
-            throw new IllegalStateException("State " + stateKey + " not exists! Make sure to setup the State Machine before change the states!");
-
-        // On change state
-        if (onChangeState != null) onChangeState.onChangeState(stateKey);
-
-        if (stateKey != getCurrentStateKey() && currentState != null && currentState.getExit() != null)
-            currentState.getExit().invoke();
-        performChangeState(state);
-        if (state.getEnter() != null) state.getEnter().invoke();
-
-        currentStateKey = stateKey;
-    }
+    fun getCurrentStateKey() = if (currentStateKey == -1) config.initialState else currentStateKey
 
     /**
-     * @param stateKey    The state to become active
-     * @param forceChange If true, forces to change to the stateKey param, even if it is already the currentStateKey
-     * @see StateMachine#changeState(int, boolean, OnChangeStateCallback)
-     */
-    public final void changeState(final int stateKey, final boolean forceChange) {
-        changeState(stateKey, forceChange, config.onChangeState);
-    }
-
-    /**
-     * @param stateKey      The state to become active
-     * @param onChangeState Custom implementation for the default onChangeState
-     * @see StateMachine#changeState(int, boolean, OnChangeStateCallback)
-     */
-    public final void changeState(final int stateKey, @Nullable final OnChangeStateCallback onChangeState) {
-        changeState(stateKey, false, onChangeState);
-    }
-
-    /**
-     * @param stateKey The state to become active
-     * @see StateMachine#changeState(int, boolean, OnChangeStateCallback)
-     */
-    public final void changeState(final int stateKey) {
-        changeState(stateKey, false);
-    }
-    //endregion
-
-    //region Add States
-
-    /**
-     * Add a new state
+     * Starts the state machine. This must be called after all states are added and initial configuration is set.
      *
-     * @throws IllegalStateException If the machine is already started
-     * @throws IllegalStateException If the key is < 0
+     * @throws IllegalStateException If the machine is already started or if the initial state is not found.
      */
-    public final StateMachine<STATE> addState(final int key, @NonNull final STATE state) {
-        if (started) throw new IllegalStateException("Machine already started");
+    fun start() {
+        check(!isStarted) { "Machine already started" }
 
-        if (key < 0) throw new IllegalStateException("State Keys must be >= 0");
-        stateMap.put(key, state);
-        return this;
+        isStarted = true
+
+        if (getCurrentStateKey() <= -1) return
+
+        val state = stateMap[getCurrentStateKey()]
+        checkNotNull(state) {
+            "State not found! Make sure to add all states before starting the machine."
+        }
+        changeState(getCurrentStateKey(), true)
     }
-    //endregion
-
-    //region Save and restore the Machine state
 
     /**
-     * Restore the state machine state
+     * Shuts down the state machine, clearing states and resetting configuration.
+     */
+    fun shutdown() {
+        stateMap.clear()
+        isStarted = false
+        currentStateKey = -1
+        config.reset()
+    }
+
+    /**
+     * Changes the current state of the machine.
      *
-     * @throws IllegalStateException If the machine is already started
+     * @param stateKey      The key of the state to become active.
+     * @param forceChange   If `true`, transitions even if `stateKey` is the current state.
+     * @param onChangeState Optional callback to be invoked before the state change.
+     * @throws IllegalStateException If the machine is not started or the state key is not found.
      */
-    public StateMachine<STATE> restoreInstanceState(@Nullable final Bundle savedInstanceState) {
-        if (started) throw new IllegalStateException("Machine already started");
-        if (savedInstanceState == null) return this;
-        currentStateKey = savedInstanceState.getInt("STATE_MACHINE_CURRENT_KEY", getCurrentStateKey());
-        return this;
+    fun changeState(
+        stateKey: Int,
+        forceChange: Boolean = false,
+        onChangeState: ((Int) -> Unit)? = config.onChangeState
+    ) {
+        check(isStarted) { "Call StateMachine#start() before making any state changes." }
+
+        if (stateKey == getCurrentStateKey() && !forceChange) return
+
+        val state = stateMap[stateKey]
+        checkNotNull(state) { "State $stateKey does not exist!" }
+
+        onChangeState?.invoke(stateKey)
+
+        val currentState = stateMap[getCurrentStateKey()]
+        if (stateKey != getCurrentStateKey() && currentState != null) currentState.exit?.invoke()
+        performChangeState(state)
+        state.enter?.invoke()
+        currentStateKey = stateKey
     }
 
     /**
-     * Save the current state of the state machine
+     * Adds a new state to the machine.
+     *
+     * @param key   The unique key for the state. Must be >= 0.
+     * @param state The state configuration.
+     * @return The state machine instance for chaining.
+     * @throws IllegalStateException If the machine is already started or the key is negative.
      */
-    @NonNull
-    public Bundle saveInstanceState() {
-        final Bundle bundle = new Bundle();
-        bundle.putInt("STATE_MACHINE_CURRENT_KEY", getCurrentStateKey());
-        return bundle;
-    }
-    //endregion
+    fun addState(key: Int, state: STATE) = apply {
+        check(!isStarted) { "Machine already started" }
+        check(key >= 0) { "State Keys must be >= 0" }
 
-    //region Config
+        stateMap[key] = state
+    }
 
     /**
-     * Holds the Machine configuration
+     * Configures and starts the [StateMachine].
+     *
+     * @param func A lambda to configure the state machine.
      */
-    public static final class Config {
+    inline fun setup(func: StateMachine<STATE>.() -> Unit) {
+        apply(func)
+        start()
+    }
 
-        private Config() {
+    /**
+     * Provides a DSL-like way to configure the [StateMachine.Config].
+     *
+     * @param configuration A lambda to apply configurations.
+     */
+    inline fun config(configuration: Config.() -> Unit) = config.run(configuration)
+
+    /**
+     * Adds a new state to the [StateMachine] using a DSL-like syntax.
+     *
+     * @param key The unique key for the state.
+     * @param stateConfig A lambda to configure the new state instance.
+     * @throws IllegalStateException If the machine is already started or the key is negative.
+     * @see [StateMachine.addState]
+     */
+    inline fun state(key: Int, stateConfig: STATE.() -> Unit) =
+        addState(key, newStateInstance().apply(stateConfig))
+
+    /**
+     * Restores the state of the machine from a [Bundle].
+     *
+     * @param savedInstanceState The bundle containing the saved state.
+     * @return The state machine instance for chaining.
+     * @throws IllegalStateException If the machine is already started.
+     */
+    fun restoreInstanceState(savedInstanceState: Bundle?): StateMachine<STATE> {
+        check(!isStarted) { "Machine already started" }
+        if (savedInstanceState == null) return this
+        currentStateKey = savedInstanceState.getInt(STATE_MACHINE_CURRENT_KEY, getCurrentStateKey())
+        return this
+    }
+
+    /**
+     * Saves the current state of the machine into a [Bundle].
+     *
+     * @return A [Bundle] containing the current state key.
+     */
+    fun saveInstanceState() = bundleOf(STATE_MACHINE_CURRENT_KEY to getCurrentStateKey())
+
+    /**
+     * Configuration for the [StateMachine].
+     */
+    class Config internal constructor() {
+        var initialState = -1
+            private set
+
+        /**
+         * Sets the global state change callback.
+         *
+         * @param onChangeState The callback to be invoked on state changes.
+         */
+        var onChangeState: ((Int) -> Unit)? = null
+            private set
+
+        /**
+         * Sets the initial state key.
+         *
+         * @param initialState The key for the initial state.
+         * @throws IllegalStateException If the key is negative.
+         */
+        fun setInitialState(initialState: Int) = apply {
+            check(initialState >= 0) { "initialState cannot be < 0" }
+            this.initialState = initialState
         }
 
-        private int initialState = -1;
 
-        private OnChangeStateCallback onChangeState = null;
-
-        public int getInitialState() {
-            return initialState;
+        fun setOnChangeState(onChangeState: (Int) -> Unit) = apply {
+            this.onChangeState = onChangeState
         }
 
-        public void setInitialState(int initialState) {
-            if (initialState < 0) throw new IllegalStateException("initialState cannot be < 0");
-            this.initialState = initialState;
-        }
-
-        @Nullable
-        public OnChangeStateCallback getOnChangeState() {
-            return onChangeState;
-        }
-
-        public void setOnChangeState(@Nullable final OnChangeStateCallback onChangeState) {
-            this.onChangeState = onChangeState;
-        }
-
-        private void reset() {
-            initialState = -1;
-            onChangeState = null;
+        internal fun reset() = apply {
+            initialState = -1
+            onChangeState = null
         }
     }
-    //endregion
 
-    //region State
-    public abstract static class State {
+    /**
+     * Represents a single state in the state machine.
+     */
+    abstract class State {
+        var enter: (() -> Unit)? = null
+            private set
+        var exit: (() -> Unit)? = null
+            private set
 
-        @Nullable
-        private Callback enter = null;
-        @Nullable
-        private Callback exit = null;
+        /**
+         * Sets a callback to be invoked when entering this state.
+         *
+         * @param callback The callback instance.
+         * @return The state instance for chaining.
+         */
+        open fun onEnter(callback: () -> Unit) = apply { enter = callback }
 
-        public State onEnter(@NonNull final Callback callback) {
-            enter = callback;
-            return this;
-        }
-
-        public State onExit(@NonNull final Callback callback) {
-            exit = callback;
-            return this;
-        }
-
-        @Nullable
-        final Callback getEnter() {
-            return enter;
-        }
-
-        @Nullable
-        final Callback getExit() {
-            return exit;
-        }
-
-        public interface Callback {
-            void invoke();
-        }
+        /**
+         * Sets a callback to be invoked when exiting this state.
+         *
+         * @param callback The callback instance.
+         * @return The state instance for chaining.
+         */
+        open fun onExit(callback: () -> Unit) = apply { exit = callback }
     }
-    //endregion
 
-    // region Callback
-    public interface OnChangeStateCallback {
-        void onChangeState(final int key);
-    }
-    //endregion
 }

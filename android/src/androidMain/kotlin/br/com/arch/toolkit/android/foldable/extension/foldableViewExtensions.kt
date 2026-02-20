@@ -33,10 +33,11 @@ private fun View.getFeatureBoundsInWindow(displayFeature: DisplayFeature): Rect?
 }
 
 /**
- * Gets the fold position on screen
+ * Calculates the fold position relative to the view's dimensions.
  *
- * @param foldingFeature Information related to the fold
- * @param orientation The desired orientation - needed whenever calculating the fold's position on screen
+ * @param foldingFeature Information about the device's fold.
+ * @param orientation The orientation of the fold ([FoldingFeature.Orientation]).
+ * @return The position of the fold (distance from the end/bottom edge), or 0 if it doesn't intersect the view.
  */
 fun View.getFoldPosition(
     foldingFeature: FoldingFeature,

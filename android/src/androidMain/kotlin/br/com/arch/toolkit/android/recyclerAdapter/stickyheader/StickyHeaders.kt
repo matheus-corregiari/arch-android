@@ -3,26 +3,34 @@ package br.com.arch.toolkit.android.recyclerAdapter.stickyheader
 import android.view.View
 
 /**
- * Adds sticky headers capabilities to the [androidx.recyclerview.widget.RecyclerView.Adapter]. Should return `true` for all
- * positions that represent sticky headers.
+ * Interface to be implemented by [androidx.recyclerview.widget.RecyclerView.Adapter] to support
+ * sticky headers.
  */
 interface StickyHeaders {
 
+    /**
+     * Checks if the item at the given [position] should be a sticky header.
+     *
+     * @param position The adapter position of the item.
+     * @return true if the item is a sticky header, false otherwise.
+     */
     fun isStickyHeader(position: Int): Boolean
 
+    /**
+     * Interface for setting up and tearing down the sticky header view.
+     */
     interface ViewSetup {
         /**
-         * Adjusts any necessary properties of the `holder` that is being used as a sticky header.
+         * Adjusts any necessary properties of the [stickyHeader] view when it becomes a sticky header.
          *
-         * [.teardownStickyHeaderView] will be called sometime after this method
-         * and before any other calls to this method go through.
+         * @param stickyHeader The view used as a sticky header.
          */
         fun setupStickyHeaderView(stickyHeader: View)
 
         /**
-         * Reverts any properties changed in [.setupStickyHeaderView].
+         * Reverts any changes made in [setupStickyHeaderView].
          *
-         * Called after [.setupStickyHeaderView].
+         * @param stickyHeader The view used as a sticky header.
          */
         fun teardownStickyHeaderView(stickyHeader: View)
     }

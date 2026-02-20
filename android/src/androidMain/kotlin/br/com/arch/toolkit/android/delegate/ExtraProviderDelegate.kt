@@ -4,6 +4,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlin.reflect.KProperty
 
+/**
+ * A property delegate for retrieving and optionally caching extras from [AppCompatActivity] intents
+ * or [Fragment] arguments.
+ *
+ * It also supports retrieving values from URI query parameters if the type is [String].
+ *
+ * @param T The type of the extra.
+ * @property extraName The key used to find the extra.
+ * @property keepState If true, the retrieved value is cached in the delegate.
+ * @property type The source type for the extra ([ExtraType]).
+ * @property defaultValue A lambda providing a default value if the extra is not found.
+ */
 class ExtraProviderDelegate<T>(
     private val extraName: String,
     private val keepState: Boolean,
@@ -87,27 +99,72 @@ class ExtraProviderDelegate<T>(
     //endregion
 }
 
+/**
+ * Defines the source of the extra.
+ */
 enum class ExtraType {
+    /**
+     * Look into Intent extras or Fragment arguments.
+     */
     ARGUMENT,
+
+    /**
+     * Look into URI query parameters (String only).
+     */
     QUERY,
+
+    /**
+     * Look into both Intent extras and URI query parameters.
+     */
     AUTO
 }
 
+/**
+ * Creates an [ExtraProviderDelegate] for an optional extra.
+ */
 fun <T> extraProvider(extra: String) = extraProvider<T?>(extra, true)
+
+/**
+ * Creates an [ExtraProviderDelegate] for an optional extra with state keeping configuration.
+ */
 fun <T> extraProvider(extra: String, keepState: Boolean) = extraProvider<T?>(extra, keepState, null)
+
+/**
+ * Creates an [ExtraProviderDelegate] with a default value.
+ */
 fun <T> extraProvider(extra: String, default: T) = extraProvider(extra, true, default)
+
+/**
+ * Creates an [ExtraProviderDelegate] with state keeping and a default value.
+ */
 fun <T> extraProvider(extra: String, keepState: Boolean, default: T) =
     extraProvider(extra, keepState, ExtraType.AUTO) { default }
 
+/**
+ * Creates an [ExtraProviderDelegate] with a specific [ExtraType].
+ */
 fun <T> extraProvider(extra: String, type: ExtraType) = extraProvider<T?>(extra, true, type)
+
+/**
+ * Creates an [ExtraProviderDelegate] with state keeping and a specific [ExtraType].
+ */
 fun <T> extraProvider(extra: String, keepState: Boolean, type: ExtraType) =
     extraProvider<T?>(extra, keepState, type, null)
 
+/**
+ * Creates an [ExtraProviderDelegate] with a specific [ExtraType] and default value.
+ */
 fun <T> extraProvider(extra: String, type: ExtraType, default: T) =
     extraProvider(extra, true, type, default)
 
+/**
+ * Creates an [ExtraProviderDelegate] with state keeping, specific [ExtraType] and default value.
+ */
 fun <T> extraProvider(extra: String, keepState: Boolean, type: ExtraType, default: T) =
     extraProvider(extra, keepState, type) { default }
 
+/**
+ * Creates an [ExtraProviderDelegate] with state keeping, specific [ExtraType] and a default value provider.
+ */
 fun <T> extraProvider(extra: String, keepState: Boolean, type: ExtraType, default: () -> T) =
     ExtraProviderDelegate(extra, keepState, type, default)

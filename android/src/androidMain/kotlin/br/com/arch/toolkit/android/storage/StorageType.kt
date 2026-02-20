@@ -1,23 +1,22 @@
 package br.com.arch.toolkit.android.storage
 
 /**
- * This Kotlin code defines an enum class named StorageType.
- * In this case, StorageType represents different ways to store data in an Android app
+ * Defines the available types of storage within the toolkit.
  */
 enum class StorageType {
 
     /**
-     * This likely refers to storing data in the device's RAM, which is temporary and will be lost when the app closes.
+     * Volatile storage in memory. Data is lost when the process is killed.
      */
     MEMORY,
 
     /**
-     * This likely refers to storing data in the device's RAM, which is temporary and will be lost when the app closes.
+     * Persistent storage using [android.content.SharedPreferences].
      */
     SHARED_PREF,
 
     /**
-     * This suggests a more secure way of using SharedPreferences, likely employing encryption to protect the stored data.
+     * Persistent and encrypted storage using [androidx.security.crypto.EncryptedSharedPreferences].
      */
     ENCRYPTED_SHARED_PREF
 }

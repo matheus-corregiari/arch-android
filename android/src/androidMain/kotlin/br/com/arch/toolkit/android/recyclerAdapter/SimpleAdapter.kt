@@ -5,7 +5,11 @@ import android.view.View
 import br.com.arch.toolkit.android.recyclerAdapter.stickyheader.StickyHeaderModel
 
 /**
- * Implementation of BaseRecyclerAdapter representing a single viewType
+ * A simplified implementation of [BaseRecyclerAdapter] for a single view type.
+ *
+ * @param MODEL The type of data to be displayed.
+ * @param VIEW The type of the view that will display the data. Must extend [View] and implement [ViewBinder].
+ * @property creator A lambda that creates a new instance of [VIEW].
  */
 open class SimpleAdapter<MODEL : Any, out VIEW>(private val creator: (context: Context) -> VIEW) :
     BaseRecyclerAdapter<MODEL>()
@@ -15,8 +19,13 @@ open class SimpleAdapter<MODEL : Any, out VIEW>(private val creator: (context: C
 }
 
 /**
- * Implementation of BaseRecyclerAdapter representing a single viewType as Header, which will stick
- * to the top of the section while scrolling down, and a single viewType as Item.
+ * A simplified implementation of [BaseRecyclerAdapter] that supports sticky headers.
+ *
+ * @param MODEL The type of data to be displayed. Must implement [StickyHeaderModel].
+ * @param VIEW The type of the view for regular items. Must extend [View] and implement [ViewBinder].
+ * @param STICKY_VIEW The type of the view for sticky headers. Must extend [View] and implement [ViewBinder].
+ * @property itemCreator A lambda that creates a new instance of [VIEW].
+ * @property stickyItemCreator A lambda that creates a new instance of [STICKY_VIEW].
  */
 open class SimpleStickyAdapter<MODEL, out VIEW, out STICKY_VIEW>(
     private val itemCreator: (context: Context) -> VIEW,
@@ -42,7 +51,14 @@ open class SimpleStickyAdapter<MODEL, out VIEW, out STICKY_VIEW>(
         items[position].isSticky
 
     companion object ViewType {
+        /**
+         * View type for regular items.
+         */
         const val DEFAULT_TYPE = 0
+
+        /**
+         * View type for sticky header items.
+         */
         const val STICKY_TYPE = 1
     }
 }

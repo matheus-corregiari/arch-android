@@ -12,19 +12,40 @@ import br.com.arch.toolkit.android.R
 import br.com.arch.toolkit.android.delegate.viewProvider
 import br.com.arch.toolkit.android.foldable.extension.handleFoldableStateChange
 
+/**
+ * An abstract base [AppCompatActivity] that simplifies handling foldable devices.
+ *
+ * It automatically manages layout inflation for different folding states based on the provided orientation
+ * and layout IDs.
+ */
 abstract class FoldableActivity : AppCompatActivity(R.layout.activity_foldable) {
 
+    /**
+     * The orientation of the fold to handle. Default is [FoldingFeature.Orientation.VERTICAL].
+     */
     protected open val orientation: FoldingFeature.Orientation = FoldingFeature.Orientation.VERTICAL
 
+    /**
+     * Layout resource ID for the start (left) panel in vertical orientation.
+     */
     @LayoutRes
     protected open val startViewId: Int = -1
 
+    /**
+     * Layout resource ID for the end (right) panel in vertical orientation.
+     */
     @LayoutRes
     protected open val endViewId: Int = -1
 
+    /**
+     * Layout resource ID for the top panel in horizontal orientation.
+     */
     @LayoutRes
     protected open val topViewId: Int = -1
 
+    /**
+     * Layout resource ID for the bottom panel in horizontal orientation.
+     */
     @LayoutRes
     protected open val bottomViewId: Int = -1
 

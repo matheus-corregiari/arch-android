@@ -1,187 +1,127 @@
-package br.com.arch.toolkit.android.statemachine;
+package br.com.arch.toolkit.android.statemachine
 
-import android.view.View;
-import android.view.ViewStub;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import android.view.View
+import android.view.ViewStub
+import androidx.annotation.IdRes
 
 /**
  * Implementation of [StateMachine]
  * This implementation uses View Visibility to make State transitions
  */
-public final class ViewStateMachine extends StateMachine<ViewStateMachine.State> {
+class ViewStateMachine : StateMachine<ViewStateMachine.State>() {
 
-    @Override
-    @NonNull
-    public State newStateInstance() {
-        return new State();
+    override fun newStateInstance() = State()
+
+    override fun performChangeState(state: State) {
+        handleVisibility(state)
+        handleEnable(state)
     }
 
-    @Override
-    protected void performChangeState(@NonNull final State state) {
-
-        // Visibility
-        for (final View view : state.gones) {
-            if (view == null) continue;
-            view.setVisibility(View.GONE);
+    @Suppress("CyclomaticComplexMethod")
+    private fun handleVisibility(state: State) {
+        for (view in state.goneViews) {
+            if (view == null) continue
+            view.visibility = View.GONE
         }
 
-        for (final View view : state.visibles) {
-            if (view == null) continue;
-            view.setVisibility(View.VISIBLE);
+        for (view in state.visibles) {
+            if (view == null) continue
+            view.visibility = View.VISIBLE
         }
 
-        for (final View view : state.invisibles) {
-            if (view == null) continue;
-            view.setVisibility(View.INVISIBLE);
-        }
-
-        // Enable
-        for (final View view : state.enables) {
-            if (view == null) continue;
-            view.setEnabled(true);
-        }
-
-        for (final View view : state.disables) {
-            if (view == null) continue;
-            view.setEnabled(false);
+        for (view in state.invisibleViews) {
+            if (view == null) continue
+            view.visibility = View.INVISIBLE
         }
 
         // Handle view references
-        final View rootView = state.rootView;
-        if (rootView != null) {
-            // Visibility
-            for (@IdRes final Integer viewId : state.goneReferences) {
-                final View view = rootView.findViewById(viewId);
-                if (view == null) continue;
-                view.setVisibility(View.GONE);
-            }
-            for (@IdRes final Integer viewId : state.visibleReferences) {
-                final View view = rootView.findViewById(viewId);
-                if (view == null) continue;
-                if (view instanceof ViewStub) {
-                    ((ViewStub) view).inflate();
-                }
-                view.setVisibility(View.VISIBLE);
-            }
-            for (@IdRes final Integer viewId : state.invisibleReferences) {
-                final View view = rootView.findViewById(viewId);
-                if (view == null) continue;
-                view.setVisibility(View.INVISIBLE);
-            }
+        val rootView = state.rootView ?: return
 
-            // Enable
-            for (@IdRes final Integer viewId : state.enableReferences) {
-                final View view = rootView.findViewById(viewId);
-                if (view == null) continue;
-                view.setEnabled(true);
-            }
-
-            for (@IdRes final Integer viewId : state.disableReferences) {
-                final View view = rootView.findViewById(viewId);
-                if (view == null) continue;
-                view.setEnabled(false);
-            }
+        for (@IdRes viewId in state.goneReferences) {
+            val view = rootView.findViewById<View?>(viewId) ?: continue
+            view.visibility = View.GONE
+        }
+        for (@IdRes viewId in state.visibleReferences) {
+            val view = rootView.findViewById<View?>(viewId) ?: continue
+            if (view is ViewStub) view.inflate()
+            view.visibility = View.VISIBLE
+        }
+        for (@IdRes viewId in state.invisibleReferences) {
+            val view = rootView.findViewById<View?>(viewId) ?: continue
+            view.visibility = View.INVISIBLE
         }
     }
 
-    public static final class State extends StateMachine.State {
-
-        @NonNull
-        private final List<View> visibles = new ArrayList<>();
-        @NonNull
-        private final List<Integer> visibleReferences = new ArrayList<>();
-        @NonNull
-        private final List<View> gones = new ArrayList<>();
-        @NonNull
-        private final List<Integer> goneReferences = new ArrayList<>();
-        @NonNull
-        private final List<View> invisibles = new ArrayList<>();
-        @NonNull
-        private final List<Integer> invisibleReferences = new ArrayList<>();
-        @NonNull
-        private final List<View> enables = new ArrayList<>();
-        @NonNull
-        private final List<Integer> enableReferences = new ArrayList<>();
-        @NonNull
-        private final List<View> disables = new ArrayList<>();
-        @NonNull
-        private final List<Integer> disableReferences = new ArrayList<>();
-        @Nullable
-        private View rootView = null;
-
-        private State() {
+    private fun handleEnable(state: State) {
+        // Enable
+        for (view in state.enables) {
+            if (view == null) continue
+            view.setEnabled(true)
         }
 
-        public State root(@NonNull final View view) {
-            rootView = view;
-            return this;
+        for (view in state.disables) {
+            if (view == null) continue
+            view.setEnabled(false)
         }
 
-        public State visibles(@NonNull final View... views) {
-            visibles.addAll(Arrays.asList(views));
-            return this;
+        // Handle view references
+        val rootView = state.rootView ?: return
+
+        for (@IdRes viewId in state.enableReferences) {
+            val view = rootView.findViewById<View?>(viewId) ?: continue
+            view.setEnabled(true)
         }
 
-        public State visibles(@NonNull @IdRes final Integer... ids) {
-            visibleReferences.addAll(Arrays.asList(ids));
-            return this;
+        for (@IdRes viewId in state.disableReferences) {
+            val view = rootView.findViewById<View?>(viewId) ?: continue
+            view.setEnabled(false)
         }
+    }
 
-        public State invisibles(@NonNull final View... views) {
-            invisibles.addAll(Arrays.asList(views));
-            return this;
-        }
+    @Suppress("TooManyFunctions")
+    class State internal constructor() : StateMachine.State() {
 
-        public State invisibles(@NonNull @IdRes final Integer... ids) {
-            invisibleReferences.addAll(Arrays.asList(ids));
-            return this;
-        }
+        internal val visibles: Set<View?> field = mutableSetOf()
+        internal val visibleReferences: Set<Int> field = mutableSetOf()
 
-        public State gones(@NonNull final View... views) {
-            gones.addAll(Arrays.asList(views));
-            return this;
-        }
+        internal val goneViews: Set<View?> field = mutableSetOf()
+        internal val goneReferences: Set<Int> field = mutableSetOf()
 
-        public State gones(@NonNull @IdRes final Integer... ids) {
-            goneReferences.addAll(Arrays.asList(ids));
-            return this;
-        }
+        internal val invisibleViews: Set<View?> field = mutableSetOf()
+        internal val invisibleReferences: Set<Int> field = mutableSetOf()
 
-        public State enables(@NonNull final View... views) {
-            enables.addAll(Arrays.asList(views));
-            return this;
-        }
+        internal val enables: Set<View?> field = mutableSetOf()
+        internal val enableReferences: Set<Int> field = mutableSetOf()
 
-        public State enables(@NonNull @IdRes final Integer... ids) {
-            enableReferences.addAll(Arrays.asList(ids));
-            return this;
-        }
+        internal val disables: Set<View?> field = mutableSetOf()
+        internal val disableReferences: Set<Int> field = mutableSetOf()
 
-        public State disables(@NonNull final View... views) {
-            disables.addAll(Arrays.asList(views));
-            return this;
-        }
+        internal var rootView: View? = null
+            private set
 
-        public State disables(@NonNull @IdRes final Integer... ids) {
-            disableReferences.addAll(Arrays.asList(ids));
-            return this;
-        }
+        fun root(view: View) = apply { rootView = view }
 
-        @Override
-        public State onEnter(@NonNull Callback callback) {
-            return (State) super.onEnter(callback);
-        }
+        fun visibles(vararg views: View?) = apply { visibles.addAll(views) }
 
-        @Override
-        public State onExit(@NonNull Callback callback) {
-            return (State) super.onExit(callback);
-        }
+        fun visibles(@IdRes vararg ids: Int) = apply { visibleReferences.addAll(ids.toSet()) }
+
+        fun invisibles(vararg views: View?) = apply { invisibleViews.addAll(views) }
+
+        fun invisibles(@IdRes vararg ids: Int) = apply { invisibleReferences.addAll(ids.toSet()) }
+
+        fun gones(vararg views: View?) = apply { goneViews.addAll(views) }
+
+        fun gones(@IdRes vararg ids: Int) = apply { goneReferences.addAll(ids.toSet()) }
+
+        fun enables(vararg views: View?) = apply { enables.addAll(views) }
+
+        fun enables(@IdRes vararg ids: Int) = apply { enableReferences.addAll(ids.toSet()) }
+
+        fun disables(vararg views: View?) = apply { disables.addAll(views) }
+
+        fun disables(@IdRes vararg ids: Int) = apply { disableReferences.addAll(ids.toSet()) }
+
+        override fun onEnter(callback: () -> Unit) = super.onEnter(callback) as State
+        override fun onExit(callback: () -> Unit) = super.onExit(callback) as State
     }
 }

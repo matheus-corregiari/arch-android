@@ -13,60 +13,12 @@ import br.com.arch.toolkit.android.util.set
 import br.com.arch.toolkit.lumber.Lumber
 
 /**
- * This code defines a class called SharedPrefStorage that implements an interface called KeyValueStorage.
- * This class is designed to store key-value pairs using Android's SharedPreferences system.
- * Let's break down the code step by step:
+ * An implementation of [KeyValueStorage] that uses [SharedPreferences] for persistence.
  *
- * <br>
- * ## Constructor and Properties
- * - internal constructor(context: Context, override val name: String)
- *      - The constructor takes a Context (providing access to Android system resources) and a name for the SharedPreferences file.
- * - override val type: StorageType = StorageType.SHARED_PREF
- *      - Indicates that this storage uses SharedPreferences.
- * - private val lock = Object()
- *      - A lock object used for synchronization to prevent concurrent access issues.
- * - private val sharedPref: SharedPreferences
- *      - An instance of SharedPreferences obtained using the provided context and name.
- * - The init block registers a listener to log changes to SharedPreferences.
- * <br>
- * ## Methods
- * - get<T>(key: String)
- *      - Retrieves a value associated with the given key, if it exists. It handles type casting and returns null if the key is not found.
- * - get<T>(key: String, default: T)
- *      - Similar to get(key), but returns the provided default value if the key is not found.
- * - set<T>(key: String, value: T?)
- *      - Stores a key-value pair. It performs validation on both the key and value before storing them.
- *      If the value is null or empty, it removes the key.
- * - remove(key: String)
- *      - Removes the key-value pair associated with the given key.
- * - remove(regex: Regex)
- *      - Removes all key-value pairs where the key matches the provided regular expression.
- * - clear()
- *      - Clears all key-value pairs from the SharedPreferences.
- * - contains(key: String)
- *      - Checks if a key exists in the SharedPreferences.
- * - size()
- *      - Returns the number of key-value pairs.
- * - keys()
- *      - Returns a list of all keys in the SharedPreferences.
- * <br>
- * ## Synchronization
- * The synchronized(lock) blocks in several methods ensure that only one thread can access the
- * SharedPreferences at a time, preventing potential race conditions and data inconsistencies.
- * <br>
- * ## Example Usage
- * ```kotlin
- * val storage = SharedPrefStorage(context, "my_preferences")
- * storage.set("user_name", "John Doe")
- * val userName = storage.get<String>("user_name")
- * ```
- * <br>
- * ## Limitations of SharedPreferences
- * While SharedPreferences is a convenient way to store simple key-value data, it has limitations:
- * - It's not designed for large amounts of data.
- * - It doesn't support complex data structures directly.
- * - It can have performance issues if used excessively.
- * > For more complex data or larger datasets, consider using other storage options like Room database or DataStore.
+ * It includes a memory cache ([MemoryStorage]) for faster access and is thread-safe.
+ *
+ * @property type The type of storage ([StorageType.SHARED_PREF] or [StorageType.ENCRYPTED_SHARED_PREF]).
+ * @property sharedPref The underlying [SharedPreferences] instance.
  */
 sealed class SharedPrefStorage(
     override val type: StorageType,
@@ -80,11 +32,23 @@ sealed class SharedPrefStorage(
         sharedPref.registerOnSharedPreferenceChangeListener { _, key -> log("Key $key changed") }
     }
 
+    /**
+     * A regular, non-encrypted [SharedPrefStorage].
+     *
+     * @param context The application context.
+     * @param name The name of the SharedPreferences file.
+     */
     class Regular(context: Context, override val name: String) : SharedPrefStorage(
         StorageType.SHARED_PREF,
         context.getSharedPreferences(name, Context.MODE_PRIVATE)
     )
 
+    /**
+     * An encrypted [SharedPrefStorage] using [EncryptedSharedPreferences].
+     *
+     * @param context The application context.
+     * @param name The name of the SharedPreferences file.
+     */
     class Encrypted(context: Context, override val name: String) : SharedPrefStorage(
         StorageType.ENCRYPTED_SHARED_PREF,
         EncryptedSharedPreferences.create(
