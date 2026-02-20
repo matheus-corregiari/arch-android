@@ -5,6 +5,11 @@ package br.com.arch.toolkit.android.statemachine
 import android.os.Bundle
 import androidx.core.os.bundleOf
 
+/**
+ * A generic state machine for managing application or view states.
+ *
+ * @param STATE The type of state handled by this machine, must extend [StateMachine.State].
+ */
 abstract class StateMachine<STATE : StateMachine.State> {
 
     private companion object {
@@ -179,13 +184,14 @@ abstract class StateMachine<STATE : StateMachine.State> {
      * Configuration for the [StateMachine].
      */
     class Config internal constructor() {
+        /**
+         * The key for the initial state.
+         */
         var initialState = -1
             private set
 
         /**
-         * Sets the global state change callback.
-         *
-         * @param onChangeState The callback to be invoked on state changes.
+         * The global state change callback.
          */
         var onChangeState: ((Int) -> Unit)? = null
             private set
@@ -194,6 +200,7 @@ abstract class StateMachine<STATE : StateMachine.State> {
          * Sets the initial state key.
          *
          * @param initialState The key for the initial state.
+         * @return The configuration instance for chaining.
          * @throws IllegalStateException If the key is negative.
          */
         fun setInitialState(initialState: Int) = apply {
@@ -201,6 +208,12 @@ abstract class StateMachine<STATE : StateMachine.State> {
             this.initialState = initialState
         }
 
+        /**
+         * Sets the global state change callback.
+         *
+         * @param onChangeState The callback to be invoked on state changes.
+         * @return The configuration instance for chaining.
+         */
         fun setOnChangeState(onChangeState: (Int) -> Unit) = apply {
             this.onChangeState = onChangeState
         }
@@ -215,8 +228,14 @@ abstract class StateMachine<STATE : StateMachine.State> {
      * Represents a single state in the state machine.
      */
     abstract class State {
+        /**
+         * Callback to be invoked when entering this state.
+         */
         var enter: (() -> Unit)? = null
             private set
+        /**
+         * Callback to be invoked when exiting this state.
+         */
         var exit: (() -> Unit)? = null
             private set
 

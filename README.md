@@ -19,6 +19,7 @@ while keeping day-to-day Android development ergonomic.
 - **Delegates for persisted properties** to reduce boilerplate for cached/config values.
 - **Recycler adapter utilities** including generic binders and sticky-header support.
 - **Foldable helpers** to react to hinge/posture changes.
+- **Application context provider** with `ContextProvider`.
 
 ## 📦 Installation
 

@@ -78,6 +78,9 @@ class ViewStateMachine : StateMachine<ViewStateMachine.State>() {
         }
     }
 
+    /**
+     * Represents a single state in a [ViewStateMachine].
+     */
     @Suppress("TooManyFunctions")
     class State internal constructor() : StateMachine.State() {
 
@@ -99,26 +102,92 @@ class ViewStateMachine : StateMachine<ViewStateMachine.State>() {
         internal var rootView: View? = null
             private set
 
+        /**
+         * Sets the root view to be used for finding views by ID.
+         *
+         * @param view The root view.
+         * @return The state instance for chaining.
+         */
         fun root(view: View) = apply { rootView = view }
 
+        /**
+         * Sets the views to be made visible when this state is entered.
+         *
+         * @param views The views to make visible.
+         * @return The state instance for chaining.
+         */
         fun visibles(vararg views: View?) = apply { visibles.addAll(views) }
 
+        /**
+         * Sets the view IDs to be made visible when this state is entered.
+         *
+         * @param ids The view IDs to make visible.
+         * @return The state instance for chaining.
+         */
         fun visibles(@IdRes vararg ids: Int) = apply { visibleReferences.addAll(ids.toSet()) }
 
+        /**
+         * Sets the views to be made invisible when this state is entered.
+         *
+         * @param views The views to make invisible.
+         * @return The state instance for chaining.
+         */
         fun invisibles(vararg views: View?) = apply { invisibleViews.addAll(views) }
 
+        /**
+         * Sets the view IDs to be made invisible when this state is entered.
+         *
+         * @param ids The view IDs to make invisible.
+         * @return The state instance for chaining.
+         */
         fun invisibles(@IdRes vararg ids: Int) = apply { invisibleReferences.addAll(ids.toSet()) }
 
+        /**
+         * Sets the views to be made gone when this state is entered.
+         *
+         * @param views The views to make gone.
+         * @return The state instance for chaining.
+         */
         fun gones(vararg views: View?) = apply { goneViews.addAll(views) }
 
+        /**
+         * Sets the view IDs to be made gone when this state is entered.
+         *
+         * @param ids The view IDs to make gone.
+         * @return The state instance for chaining.
+         */
         fun gones(@IdRes vararg ids: Int) = apply { goneReferences.addAll(ids.toSet()) }
 
+        /**
+         * Sets the views to be enabled when this state is entered.
+         *
+         * @param views The views to enable.
+         * @return The state instance for chaining.
+         */
         fun enables(vararg views: View?) = apply { enables.addAll(views) }
 
+        /**
+         * Sets the view IDs to be enabled when this state is entered.
+         *
+         * @param ids The view IDs to enable.
+         * @return The state instance for chaining.
+         */
         fun enables(@IdRes vararg ids: Int) = apply { enableReferences.addAll(ids.toSet()) }
 
+        /**
+         * Sets the views to be disabled when this state is entered.
+         *
+         * @param views The views to disable.
+         * @return The state instance for chaining.
+         */
         fun disables(vararg views: View?) = apply { disables.addAll(views) }
 
+        /**
+         * Sets the view IDs to be disabled when this state is entered.
+         *
+         * @param ids The view IDs to disable.
+         * @return The state instance for chaining.
+         */
         fun disables(@IdRes vararg ids: Int) = apply { disableReferences.addAll(ids.toSet()) }
 
         override fun onEnter(callback: () -> Unit) = super.onEnter(callback) as State

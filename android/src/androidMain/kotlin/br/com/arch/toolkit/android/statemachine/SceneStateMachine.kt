@@ -25,6 +25,9 @@ class SceneStateMachine : StateMachine<SceneStateMachine.State>() {
         }
     }
 
+    /**
+     * Represents a single state in a [SceneStateMachine].
+     */
     class State internal constructor() : StateMachine.State() {
 
         internal var scene: Scene? = null
@@ -40,12 +43,31 @@ class SceneStateMachine : StateMachine<SceneStateMachine.State>() {
          */
         fun scene(pair: Pair<Int, ViewGroup>) = scene(pair.first, pair.second)
 
+        /**
+         * Sets the scene for a [SceneStateMachine.State] using a layout resource ID and container.
+         *
+         * @param sceneLayout The layout resource ID for the scene.
+         * @param container The root [ViewGroup] for the scene.
+         * @return The [SceneStateMachine.State] instance for chaining.
+         */
         fun scene(@LayoutRes sceneLayout: Int, container: ViewGroup) = apply {
             scene = Scene.getSceneForLayout(container, sceneLayout, container.context)
         }
 
+        /**
+         * Sets the scene for a [SceneStateMachine.State].
+         *
+         * @param scene The [Scene] instance.
+         * @return The [SceneStateMachine.State] instance for chaining.
+         */
         fun scene(scene: Scene) = apply { this.scene = scene }
 
+        /**
+         * Sets the transition to be used when entering this state.
+         *
+         * @param transition The [Transition] instance.
+         * @return The [SceneStateMachine.State] instance for chaining.
+         */
         fun transition(transition: Transition) = apply { this.transition = transition }
 
         override fun onEnter(callback: () -> Unit) = super.onEnter(callback) as State
