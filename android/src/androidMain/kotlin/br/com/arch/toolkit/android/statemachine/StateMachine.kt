@@ -233,6 +233,7 @@ abstract class StateMachine<STATE : StateMachine.State> {
          */
         var enter: (() -> Unit)? = null
             private set
+
         /**
          * Callback to be invoked when exiting this state.
          */
