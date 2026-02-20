@@ -201,7 +201,6 @@ abstract class StateMachine<STATE : StateMachine.State> {
             this.initialState = initialState
         }
 
-
         fun setOnChangeState(onChangeState: (Int) -> Unit) = apply {
             this.onChangeState = onChangeState
         }
@@ -237,5 +236,4 @@ abstract class StateMachine<STATE : StateMachine.State> {
          */
         open fun onExit(callback: () -> Unit) = apply { exit = callback }
     }
-
 }

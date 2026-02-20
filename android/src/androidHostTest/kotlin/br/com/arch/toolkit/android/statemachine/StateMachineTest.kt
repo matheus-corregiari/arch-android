@@ -77,7 +77,7 @@ class StateMachineTest {
     }
 
     @Test
-    fun startMachine_withValidDefaultConfigAndStateConfiguration_shouldChangeMachineStateToInitialState() {
+    fun startMachine_withValidDefaultConfigAndStateConfig_shouldChangeMachineStateToInitialState() {
         val machine = TestStateMachine()
 
         machine.addState(0, machine.newStateInstance())

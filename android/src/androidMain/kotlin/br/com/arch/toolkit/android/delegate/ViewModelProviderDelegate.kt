@@ -14,7 +14,9 @@ import kotlin.reflect.KProperty
  * @param T The type of the [ViewModel].
  * @property kClass The class of the [ViewModel] to provide.
  */
-class ViewModelProviderDelegate<out T : ViewModel> internal constructor(private val kClass: KClass<T>) {
+class ViewModelProviderDelegate<out T : ViewModel> internal constructor(
+    private val kClass: KClass<T>
+) {
 
     operator fun getValue(thisRef: AppCompatActivity, property: KProperty<*>): T =
         thisRef.defaultViewModelProviderFactory.create(kClass.java)

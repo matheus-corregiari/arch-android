@@ -6,7 +6,7 @@ import br.com.arch.toolkit.android.storage.keyValue.KeyValueStorage
 /**
  * A wrapper class that provides a way to observe and manage a configuration value stored in [KeyValueStorage].
  *
- * It provides both [LiveData] and [Flow] for observation.
+ * It provides both [androidx.lifecycle.LiveData] and [kotlinx.coroutines.flow.Flow] for observation.
  *
  * @param T The type of the value being stored.
  * @property name The key used to store the value in the storage.
@@ -19,8 +19,8 @@ data class ConfigValue<T : Any>(
     private val storage: () -> KeyValueStorage
 ) {
 
-    private var _value: T? by keyValueStorage(default::class, name).storage(storage)
-    private val observable = ObservableValue(default, ::_value) { _value = it }
+    private var value: T? by keyValueStorage(default::class, name).storage(storage)
+    private val observable = ObservableValue(default, ::value) { value = it }
 
     /**
      * Returns a [androidx.lifecycle.LiveData] object to observe changes to the value.

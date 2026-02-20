@@ -18,8 +18,11 @@ class SceneStateMachine : StateMachine<SceneStateMachine.State>() {
         val scene = state.scene ?: return
         val transaction = state.transition
         val attached = scene.sceneRoot.isAttachedToWindow
-        if (transaction == null || !attached) scene.enter()
-        else TransitionManager.go(state.scene, transaction.clone())
+        if (transaction == null || !attached) {
+            scene.enter()
+        } else {
+            TransitionManager.go(state.scene, transaction.clone())
+        }
     }
 
     class State internal constructor() : StateMachine.State() {
