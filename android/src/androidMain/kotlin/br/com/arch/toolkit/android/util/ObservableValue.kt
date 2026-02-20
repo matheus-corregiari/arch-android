@@ -12,6 +12,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 
+/**
+ * Observable wrapper for a value persisted by external getter/setter functions.
+ *
+ * The internal state is mirrored in a [Flow] and [LiveData], allowing Kotlin-first APIs that are
+ * still interoperable with Android Lifecycle observers.
+ *
+ * @param initialValue fallback value used before reading from [getter].
+ * @param getter source of truth reader.
+ * @param setter source of truth writer. When null, [value] becomes read-only.
+ */
 class ObservableValue<T>(
     initialValue: T,
     private val getter: () -> T?,
@@ -21,16 +31,31 @@ class ObservableValue<T>(
     private val scope = CoroutineScope(job + Dispatchers.IO)
     private val _flow = MutableStateFlow(initialValue)
 
+    /**
+     * Cold observable value stream.
+     *
+     * Every access synchronizes from [getter] before returning.
+     */
     val flow: Flow<T>
         get() {
             updateWithGetter()
             return _flow.asStateFlow().shareIn(scope, SharingStarted.WhileSubscribed())
         }
+
+    /**
+     * [LiveData] view of [flow], useful for lifecycle-aware Android observers.
+     */
     val liveData: LiveData<T>
         get() {
             updateWithGetter()
             return _flow.asStateFlow().asLiveData(scope.coroutineContext)
         }
+
+    /**
+     * Current value synchronized with [getter].
+     *
+     * Write operations call [setter] (if available) and then update the local cache.
+     */
     var value: T
         get() = updateWithGetter() ?: _flow.value
         set(value) {
