@@ -7,10 +7,13 @@ plugins {
 }
 
 kotlin {
+    compilerOptions { freeCompilerArgs.add("-Xexplicit-backing-fields") }
+
     androidLibrary {
         compileSdk = versionInt(libs.versions.build.sdk.compile)
         minSdk = versionInt(libs.versions.build.sdk.min)
         buildToolsVersion = versionString(libs.versions.build.tools)
+        withJava()
     }
 
     // Libraries
@@ -26,7 +29,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime)
             implementation(libs.arch.lumber)
         }
-        commonTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.robolectric.test)
             implementation(libs.junit.test)
             implementation(libs.jetbrains.kotlin.test)
