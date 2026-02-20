@@ -2,15 +2,21 @@ package br.com.arch.toolkit.android.storage
 
 import kotlin.reflect.KClass
 
+/**
+ * Contract used by storage delegates to serialize and deserialize non-primitive values.
+ *
+ * Provide a platform-specific implementation (for example kotlinx.serialization or Moshi)
+ * and register it through [Storage.Settings.setComplexDataParser].
+ */
 interface ComplexDataParser {
 
     /**
-     * Parses a json string into a data class
+     * Decodes [json] into an instance of [classToParse].
      */
     fun <T : Any> fromJson(json: String, classToParse: KClass<T>): T
 
     /**
-     * Parses a data class into a json string
+     * Encodes [data] as JSON.
      */
     fun <T : Any> toJson(data: T): String
 }
