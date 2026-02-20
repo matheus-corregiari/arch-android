@@ -52,8 +52,8 @@ jobs:
       - name: Build
         run: ./gradlew build
 
-      - name: Publish to GitHub Packages
-        run: ./gradlew publishAllPublicationsToGithubRepository
-
       - name: Publish to Maven Central
         run: ./gradlew publishAndReleaseToMavenCentral
+
+      - name: Publish to GitHub Packages
+        run: ./gradlew publishAllPublicationsToGithubRepository
