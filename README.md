@@ -141,6 +141,6 @@ limitations under the License.
 [badge-kotlin]: https://img.shields.io/badge/kotlin-2.3.10-blue.svg?logo=kotlin
 [badge-maven]: https://img.shields.io/maven-central/v/io.github.matheus-corregiari/arch-android.svg
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
-[badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=P977R4GMUO
+[badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6
 [badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/lint.yml/badge.svg
 [badge-test]: https://github.com/matheus-corregiari/arch-android/actions/workflows/coverage.yml/badge.svg
