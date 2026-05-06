@@ -6,24 +6,21 @@ jacoco = "0.8.14"
 detekt = "1.23.8"
 
 ## --- Build Config and SDK --- ##
-#noinspection UnusedVersionCatalogEntry
 build-sdk-min = "20"
-#noinspection UnusedVersionCatalogEntry
-build-sdk-compile = "36"
-#noinspection UnusedVersionCatalogEntry
-build-tools = "36.1.0"
+build-sdk-compile = "37"
+build-tools = "37.0.0"
 
 ## JetBrains
-jetbrains-kotlin = "2.3.10"
+jetbrains-kotlin = "2.3.21"
 jetbrains-dokka = "2.2.0"
-jetbrains-kover = "0.9.7"
+jetbrains-kover = "0.9.8"
 jetbrains-coroutines = "1.10.2"
 
 ## AndroidX
-androidx-plugin = "9.0.1"
+androidx-plugin = "9.2.0"
 
 ## Tools
-ktlint = "14.0.1"
+ktlint = "14.2.0"
 vanniktech-publish = "0.36.0"
 
 # ------------------------------------------------------------------------------------------------ #
@@ -47,7 +44,7 @@ androidx-constraint = { module = "androidx.constraintlayout:constraintlayout", v
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version = "2.10.0" }
 
 ## Arch Toolkit
-arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.0.2" }
+arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.0.3" }
 
 ## Tools
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }

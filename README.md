@@ -96,8 +96,8 @@ val enabled = darkMode.get()
 
 | Tool       | Version  |
 |:-----------|:---------|
-| **Kotlin** | `2.3.10` |
-| **Gradle** | `9.3.1`  |
+| **Kotlin** | `2.3.21` |
+| **Gradle** | `9.5.0`  |
 | **Java**   | `21`     |
 
 ## 🔍 Quality Notes
@@ -138,7 +138,7 @@ limitations under the License.
 [link-maven]: https://search.maven.org/artifact/io.github.matheus-corregiari/arch-android
 [link-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android
 
-[badge-kotlin]: https://img.shields.io/badge/kotlin-2.3.10-blue.svg?logo=kotlin
+[badge-kotlin]: https://img.shields.io/badge/kotlin-2.3.21-blue.svg?logo=kotlin
 [badge-maven]: https://img.shields.io/maven-central/v/io.github.matheus-corregiari/arch-android.svg
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
 [badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6

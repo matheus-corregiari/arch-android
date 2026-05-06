@@ -10,7 +10,7 @@ plugins {
 extensions.configure<KotlinMultiplatformExtension> {
     compilerOptions { jvmToolchain(projectJavaVersionCode) }
     withSourcesJar(true)
-    androidLibrary {
+    android {
         namespace = "br.com.arch.toolkit.${project.name}"
         testNamespace = "test.$namespace"
         androidResources { enable = true }
