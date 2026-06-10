@@ -1,4 +1,4 @@
-name: Test
+name: Coverage
 
 on:
   push:
@@ -14,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  coverage:
+    name: Coverage Gate
     runs-on: ubuntu-latest
 
     steps:
@@ -24,13 +24,32 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup-gradle
 
-      - name: Tests
-        run: ./gradlew allTests
+      - name: Tests and merged coverage
+        run: ./gradlew ciCoverage
 
-      - name: Coverage Reports
-        run: ./gradlew koverXmlReport
+      - name: Upload coverage HTML
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: merged-kover-html
+          path: |
+            build/reports/kover/html
+            **/build/reports/kover/html
+          if-no-files-found: error
+
+      - name: Upload coverage XML
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: merged-kover-xml
+          path: |
+            build/reports/kover/report.xml
+            **/build/reports/kover/report.xml
+          if-no-files-found: error
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: build/reports/kover/report.xml
+          fail_ci_if_error: true

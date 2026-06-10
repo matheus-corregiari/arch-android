@@ -1,0 +1,96 @@
+plugins {
+    alias(libs.plugins.jetbrains.multiplatform) apply false
+    alias(libs.plugins.jetbrains.kover)
+    alias(libs.plugins.vanniktech.publish) apply false
+}
+
+dependencies {
+    subprojects.forEach { add("kover", project(it.path)) }
+}
+
+val syncContributingDocs by tasks.registering(Copy::class) {
+    description = "Syncs CONTRIBUTING.md into the MkDocs source tree."
+    from(layout.projectDirectory.file("CONTRIBUTING.md"))
+    into(layout.projectDirectory.dir("docs"))
+    rename { "contributing.md" }
+}
+
+val ciLint by tasks.registering {
+    group = "CI"
+    description = "Runs lint checks for all modules."
+}
+
+val ciDocs by tasks.registering {
+    group = "CI"
+    description = "Generates API documentation inputs for the MkDocs site."
+    dependsOn(syncContributingDocs)
+}
+
+val ciBuild by tasks.registering {
+    group = "CI"
+    description = "Assembles all publishable modules."
+}
+
+val ciTest by tasks.registering {
+    group = "CI"
+    description = "Runs all supported test tasks."
+}
+
+val ciCoverage by tasks.registering {
+    group = "CI"
+    description = "Runs tests and verifies merged coverage."
+    dependsOn(ciTest, "koverXmlReport", "koverHtmlReport", "koverVerify")
+}
+
+val ciPublishMavenCentral by tasks.registering {
+    group = "CI"
+    description = "Publishes all modules to Maven Central."
+}
+
+val ciPublishGithubPackages by tasks.registering {
+    group = "CI"
+    description = "Publishes all modules to GitHub Packages."
+}
+
+val ciPublishLocal by tasks.registering {
+    group = "CI"
+    description = "Publishes all modules to the local Maven repository."
+}
+
+gradle.projectsEvaluated {
+    val libraryProjects = subprojects.filter {
+        it.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+    }
+    val publishableProjects = subprojects.filter {
+        it.plugins.hasPlugin("com.vanniktech.maven.publish")
+    }
+
+    fun Project.taskPath(name: String): String? = tasks.findByName(name)?.path
+
+    ciLint.configure {
+        dependsOn(libraryProjects.mapNotNull { it.taskPath("detekt") })
+        dependsOn(libraryProjects.mapNotNull { it.taskPath("ktlintCheck") })
+    }
+    ciDocs.configure {
+        dependsOn(publishableProjects.mapNotNull { it.taskPath("dokkaGeneratePublicationHtml") })
+    }
+    ciBuild.configure {
+        dependsOn(publishableProjects.mapNotNull { it.taskPath("assemble") })
+    }
+    ciTest.configure {
+        dependsOn(libraryProjects.mapNotNull { it.taskPath("allTests") })
+    }
+    ciPublishMavenCentral.configure {
+        dependsOn(publishableProjects.mapNotNull { it.taskPath("publishAndReleaseToMavenCentral") })
+    }
+    ciPublishGithubPackages.configure {
+        dependsOn(
+            publishableProjects.mapNotNull {
+                it.taskPath("publishAllPublicationsToGithubRepository")
+            }
+        )
+    }
+    ciPublishLocal.configure {
+        dependsOn(publishableProjects.mapNotNull { it.taskPath("publishToMavenLocal") })
+    }
+}

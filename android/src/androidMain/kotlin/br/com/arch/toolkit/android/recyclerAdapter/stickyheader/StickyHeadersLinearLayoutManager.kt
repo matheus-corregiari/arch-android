@@ -23,6 +23,10 @@ import kotlin.math.min
 )
 class StickyHeadersLinearLayoutManager<T> :
     LinearLayoutManager where T : RecyclerView.Adapter<*>, T : StickyHeaders {
+    private companion object {
+        const val STICKY_HEADER_ELEVATION = 8f
+    }
+
     private var mAdapter: T? = null
 
     private var mTranslationX: Float = 0.toFloat()
@@ -208,13 +212,14 @@ class StickyHeadersLinearLayoutManager<T> :
     private fun attachStickyHeader() {
         mStickyHeader?.let {
             attachView(it)
-            it.elevation = 8f
+            it.elevation = STICKY_HEADER_ELEVATION
         }
     }
 
     /**
      * Updates the sticky header state (creation, binding, display), to be called whenever there's a layout or scroll
      */
+    @Suppress("CyclomaticComplexMethod")
     private fun updateStickyHeader(recycler: RecyclerView.Recycler?, layout: Boolean) {
         val headerCount = mHeaderPositions.size
         val childCount = childCount
@@ -399,11 +404,7 @@ class StickyHeadersLinearLayoutManager<T> :
     private fun isViewValidAnchor(
         view: View?,
         params: RecyclerView.LayoutParams?
-    ): Boolean = if (view != null &&
-        params != null &&
-        !params.isItemRemoved &&
-        !params.isViewInvalid
-    ) {
+    ): Boolean = if (view != null && params.isValidAnchorParams()) {
         if (orientation == RecyclerView.VERTICAL) {
             if (reverseLayout) {
                 view.top + view.translationY <= height + mTranslationY
@@ -420,6 +421,9 @@ class StickyHeadersLinearLayoutManager<T> :
     } else {
         false
     }
+
+    private fun RecyclerView.LayoutParams?.isValidAnchorParams(): Boolean =
+        this != null && !isItemRemoved && !isViewInvalid
 
     /**
      * Returns true when the `view` is at the edge of the parent [RecyclerView].
@@ -622,6 +626,7 @@ class StickyHeadersLinearLayoutManager<T> :
             }
         }
 
+        @Suppress("CyclomaticComplexMethod")
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
             // Shift moved headers by toPosition - fromPosition.
             // Shift headers in-between by -itemCount (reverse if upwards).
