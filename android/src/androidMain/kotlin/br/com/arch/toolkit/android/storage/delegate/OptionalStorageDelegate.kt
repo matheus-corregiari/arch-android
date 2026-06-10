@@ -34,7 +34,7 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
             ?: ThresholdData<T>(threshold).also { Storage.KeyValue.memory[key] = it }
     }
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "ReturnCount")
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         val name = name.get() ?: return null
         val storage = storage.get() ?: return null

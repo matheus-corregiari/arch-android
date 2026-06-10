@@ -29,27 +29,15 @@ operator fun <T : Any?> SharedPreferences.set(key: String, value: T) =
         null -> edit { remove(key) }
 
         // Primitive data types
-        is String? -> edit { putString(key, value) }
-
         is String -> edit { putString(key, value) }
-
-        is Boolean? -> edit { putBoolean(key, value) }
 
         is Boolean -> edit { putBoolean(key, value) }
 
-        is Int? -> edit { putInt(key, value) }
-
         is Int -> edit { putInt(key, value) }
-
-        is Float? -> edit { putFloat(key, value) }
 
         is Float -> edit { putFloat(key, value) }
 
-        is Double? -> edit { putString(key, value.toString()) }
-
         is Double -> edit { putString(key, value.toString()) }
-
-        is Long? -> edit { putLong(key, value) }
 
         is Long -> edit { putLong(key, value) }
 

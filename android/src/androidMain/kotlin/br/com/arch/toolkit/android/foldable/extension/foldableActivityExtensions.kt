@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package br.com.arch.toolkit.android.foldable.extension
 
 import android.view.ViewGroup

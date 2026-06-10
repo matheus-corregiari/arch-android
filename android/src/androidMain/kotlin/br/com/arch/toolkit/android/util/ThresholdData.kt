@@ -21,13 +21,14 @@ class ThresholdData<T>(private val duration: Duration) {
      * Returns `true` when the cached value is missing or older than [duration].
      */
     fun isExpired(): Boolean {
-        this.storageName ?: return true
-        this.data ?: return true
-        this.name ?: return true
-        val lastTimestamp = this.timestamp ?: return true
-        val deltaTime = System.currentTimeMillis() - lastTimestamp
-
-        return deltaTime > duration.inWholeMilliseconds
+        val lastTimestamp = timestamp
+        val isComplete =
+            storageName != null &&
+                data != null &&
+                name != null &&
+                lastTimestamp != null
+        return !isComplete ||
+            System.currentTimeMillis() - checkNotNull(lastTimestamp) > duration.inWholeMilliseconds
     }
 
     /**

@@ -3,7 +3,7 @@
 ## --- Plugins and more general stuff --- ##
 #noinspection UnusedVersionCatalogEntry
 jacoco = "0.8.14"
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.3"
 
 ## --- Build Config and SDK --- ##
 build-sdk-min = "20"
@@ -11,13 +11,13 @@ build-sdk-compile = "37"
 build-tools = "37.0.0"
 
 ## JetBrains
-jetbrains-kotlin = "2.3.21"
+jetbrains-kotlin = "2.4.0"
 jetbrains-dokka = "2.2.0"
 jetbrains-kover = "0.9.8"
-jetbrains-coroutines = "1.10.2"
+jetbrains-coroutines = "1.11.0"
 
 ## AndroidX
-androidx-plugin = "9.2.0"
+androidx-plugin = "9.2.1"
 
 ## Tools
 ktlint = "14.2.0"
@@ -44,22 +44,24 @@ androidx-constraint = { module = "androidx.constraintlayout:constraintlayout", v
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version = "2.10.0" }
 
 ## Arch Toolkit
-arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.0.3" }
+arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.2.0" }
 
 ## Tools
-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 ktlint = { module = "org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlint" }
 vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "vanniktech-publish" }
 
 ## Test
 junit-test = { module = "junit:junit", version = "4.13.2" }
 robolectric-test = { module = "org.robolectric:robolectric", version = "4.16.1" }
-mockk-test-android = { module = "io.mockk:mockk-android", version = "1.14.9" }
-mockk-test-agent = { module = "io.mockk:mockk", version = "1.14.9" }
+mockk-test-android = { module = "io.mockk:mockk-android", version = "1.14.11" }
+mockk-test-agent = { module = "io.mockk:mockk", version = "1.14.11" }
 
 # ------------------------------------------------------------------------------------------------ #
 [plugins]
-## Nothing Here Yet!
+jetbrains-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "jetbrains-kotlin" }
+jetbrains-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "jetbrains-kover" }
+vanniktech-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-publish" }
 
 # ------------------------------------------------------------------------------------------------ #
 [bundles]
