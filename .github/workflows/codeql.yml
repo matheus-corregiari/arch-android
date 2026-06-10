@@ -31,8 +31,13 @@ jobs:
           languages: java-kotlin
           build-mode: manual
 
-      - name: Build JVM / Android targets
-        run: ./gradlew build -x allTests
+      # CodeQL currently supports Kotlin through 2.3.x. Keep Kotlin 2.4.0 for normal builds
+      # and use the latest compatible compiler only for the instrumented analysis build.
+      - name: Select CodeQL-compatible Kotlin
+        run: sed -i 's/jetbrains-kotlin = "2.4.0"/jetbrains-kotlin = "2.3.21"/' gradle/libs.versions.toml
+
+      - name: Build public modules
+        run: ./gradlew ciBuild
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

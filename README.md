@@ -1,146 +1,116 @@
 # Arch Android Toolkit
 
-A Kotlin-first Android toolkit with APIs designed to fit well in **KMP projects** (Android source set)
-while keeping day-to-day Android development ergonomic.
+A Kotlin-first Android toolkit with APIs designed for Android source sets in KMP projects.
 
 [![Maven Central][badge-maven]][link-maven]
 [![License][badge-license]](/LICENSE)
 [![Kotlin][badge-kotlin]](https://kotlinlang.org)
+[![Latest release][badge-release]][link-release]
 ![Lint][badge-lint]
-![Test][badge-test]
-[![Coverage][badge-coverage]][link-coverage]
+![Coverage][badge-coverage]
 
----
+## Features
 
-## ✨ Features
+- State machines for view and scene orchestration.
+- Typed storage backed by memory, SharedPreferences, or encrypted SharedPreferences.
+- Property delegates for persisted values, extras, views, and ViewModels.
+- RecyclerView adapters, binders, and sticky headers.
+- Foldable layout helpers.
+- Application context provider.
 
-- **State machines** for view and scene orchestration (`StateMachine`, `ViewStateMachine`, `SceneStateMachine`).
-- **Storage abstractions** with in-memory and SharedPreferences implementations.
-- **Delegates for persisted properties** to reduce boilerplate for cached/config values.
-- **Recycler adapter utilities** including generic binders and sticky-header support.
-- **Foldable helpers** to react to hinge/posture changes.
-- **Application context provider** with `ContextProvider`.
-
-## 📦 Installation
+## Installation
 
 ```kotlin
-// build.gradle.kts
-
-// If your project is KMP
 kotlin {
     sourceSets {
-        androidMain {
-            dependencies {
-                implementation("io.github.matheus-corregiari:arch-android:<latest-version>")
-            }
+        androidMain.dependencies {
+            implementation("io.github.matheus-corregiari:arch-android:<latest-version>")
         }
     }
 }
+```
 
-// If your project is only Android
+For an Android-only project:
+
+```kotlin
 dependencies {
     implementation("io.github.matheus-corregiari:arch-android:<latest-version>")
 }
 ```
 
-## 🛠️ Usage
+## Usage
 
-### 1) Configure storage at startup
+Initialize storage and the context provider from the application:
 
 ```kotlin
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-
         Storage.KeyValue.init(this)
         ContextProvider.init(this)
     }
 }
 ```
 
-### 2) Build a simple state machine
+Create a view state machine:
 
 ```kotlin
 val machine = ViewStateMachine()
 machine.setup {
-    state(0) { visibles(viewA); gones(viewB) }
-    state(1) { visibles(viewB); gones(viewA) }
+    state(0) {
+        visibles(viewA)
+        gones(viewB)
+    }
+    state(1) {
+        visibles(viewB)
+        gones(viewA)
+    }
 }
-
 machine.changeState(0)
 ```
 
-### 3) Persist a typed config value
+Persist a typed value:
 
 ```kotlin
 val darkMode = ConfigValue(
     name = "dark_mode",
     default = false,
-    storage = { Storage.KeyValue.regular }
+    storage = { Storage.KeyValue.regular },
 )
 
 darkMode.set(true)
 val enabled = darkMode.get()
 ```
 
-## 🌍 Platform Support
+## Platform Support
 
-| Target      | Support |
-|:------------|:--------|
-| **Android** | ✅      |
+| Target | Support |
+|:-------|:--------|
+| Android | Supported from `minSdk 20` |
 
-> This module is Android-focused, but the public API style favors KMP-friendly usage from
-> `androidMain` and shared architecture layers.
+## Toolchain
 
-## 🏗️ Built With
+| Tool | Version |
+|:-----|:--------|
+| Kotlin | `2.4.0` |
+| Gradle | `9.5.1` |
+| Java | `21` |
 
-| Tool       | Version  |
-|:-----------|:---------|
-| **Kotlin** | `2.3.21` |
-| **Gradle** | `9.5.0`  |
-| **Java**   | `21`     |
+## Documentation
 
-## 🔍 Quality Notes
+Project guides and API documentation are published through GitHub Pages.
+See [CONTRIBUTING](CONTRIBUTING.md) for the local workflow.
 
-- KDocs are written in English and optimized for Dokka rendering.
-- `ContextProvider` uses `WeakReference` to reduce Activity leak risk.
-- `ObservableValue` maintains an internal coroutine scope; prefer lifecycle-bounded instances.
+## License
 
-## 🤝 Contributing
+Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 
-Contributions are welcome! If you find a bug or have a feature request, please open an issue. If
-you'd like to contribute code, please fork the repository and submit a pull request.
+[link-maven]: https://central.sonatype.com/artifact/io.github.matheus-corregiari/arch-android
+[link-release]: https://github.com/matheus-corregiari/arch-android/releases/latest
 
-Please read [CONTRIBUTING](CONTRIBUTING.md) for a straightforward, KMP-focused workflow.
-
-## 📚 Documentation
-
-For detailed API information, please refer to the [KDocs](/docs/api/android/index.md).
-
-## 📄 License
-
-```text
-Copyright 2025 Matheus Corregiari
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
-[link-maven]: https://search.maven.org/artifact/io.github.matheus-corregiari/arch-android
-[link-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android
-
-[badge-kotlin]: https://img.shields.io/badge/kotlin-2.3.21-blue.svg?logo=kotlin
+[badge-kotlin]: https://img.shields.io/badge/kotlin-2.4.0-blue.svg?logo=kotlin
 [badge-maven]: https://img.shields.io/maven-central/v/io.github.matheus-corregiari/arch-android.svg
+[badge-release]: https://img.shields.io/github/v/release/matheus-corregiari/arch-android
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
 [badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6
 [badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/lint.yml/badge.svg
-[badge-test]: https://github.com/matheus-corregiari/arch-android/actions/workflows/coverage.yml/badge.svg
