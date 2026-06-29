@@ -1,5 +1,11 @@
 @file:Suppress("UnstableApiUsage", "OPT_IN_USAGE")
 
+/**
+ * Configures a Kotlin Multiplatform Android library module.
+ *
+ * The plugin owns common compiler, Android namespace, lint, test coverage, source jar, and
+ * consumer ProGuard defaults shared by publishable library modules.
+ */
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
