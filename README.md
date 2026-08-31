@@ -9,6 +9,14 @@ A Kotlin-first Android toolkit with APIs designed for Android source sets in KMP
 ![Lint][badge-lint]
 ![Coverage][badge-coverage]
 
+## Requirements
+
+- Kotlin `2.4.10`
+- Gradle wrapper `9.7.1`
+- JDK `21` via the Gradle toolchain
+- Android `minSdk 20` and `compileSdk 37`
+- Use the project wrapper instead of a local Gradle install
+
 ## Features
 
 - State machines for view and scene orchestration.

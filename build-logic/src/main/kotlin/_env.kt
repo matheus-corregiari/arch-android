@@ -6,4 +6,4 @@ fun Project.env(name: String) =
     System
         .getenv(name)
         .orEmpty()
-        .ifBlank { properties[name]?.toString().orEmpty() }
+        .ifBlank { findProperty(name)?.toString().orEmpty() }
