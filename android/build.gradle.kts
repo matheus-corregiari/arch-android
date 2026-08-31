@@ -6,6 +6,19 @@ plugins {
     id("arch-publish")
 }
 
+kover {
+    reports {
+        filters {
+            excludes {
+                classes("br.com.arch.toolkit.android.foldable.**")
+                classes("br.com.arch.toolkit.android.recyclerAdapter.**")
+                classes("br.com.arch.toolkit.android.delegate.**")
+                classes("br.com.arch.toolkit.android.storage.delegate.**")
+            }
+        }
+    }
+}
+
 kotlin {
     android {
         compileSdk = versionInt(libs.versions.build.sdk.compile)
