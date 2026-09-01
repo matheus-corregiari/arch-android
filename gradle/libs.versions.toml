@@ -3,7 +3,7 @@
 ## --- Plugins and more general stuff --- ##
 #noinspection UnusedVersionCatalogEntry
 jacoco = "0.8.14"
-detekt = "2.0.0-alpha.5"
+detekt = "2.0.0-alpha.6"
 
 ## --- Build Config and SDK --- ##
 build-sdk-min = "20"
