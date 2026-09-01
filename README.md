@@ -100,8 +100,8 @@ val enabled = darkMode.get()
 
 | Tool | Version |
 |:-----|:--------|
-| Kotlin | `2.4.0` |
-| Gradle | `9.5.1` |
+| Kotlin | `2.4.10` |
+| Gradle | `9.7.1` |
 | Java | `21` |
 
 ## Documentation
@@ -116,7 +116,7 @@ Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 [link-maven]: https://central.sonatype.com/artifact/io.github.matheus-corregiari/arch-android
 [link-release]: https://github.com/matheus-corregiari/arch-android/releases/latest
 
-[badge-kotlin]: https://img.shields.io/badge/kotlin-2.4.0-blue.svg?logo=kotlin
+[badge-kotlin]: https://img.shields.io/badge/kotlin-2.4.10-blue.svg?logo=kotlin
 [badge-maven]: https://img.shields.io/maven-central/v/io.github.matheus-corregiari/arch-android.svg
 [badge-release]: https://img.shields.io/github/v/release/matheus-corregiari/arch-android
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
