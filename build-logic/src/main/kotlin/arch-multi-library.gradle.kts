@@ -32,8 +32,6 @@ extensions.configure<KotlinMultiplatformExtension> {
             absolutePaths = false
             warningsAsErrors = false
 
-            htmlOutput = File("$rootDir/build/reports/lint/html/${project.name}-lint.html")
-            xmlOutput = File("$rootDir/build/reports/lint/xml/${project.name}-lint.xml")
         }
         testCoverage { jacocoVersion = libraries.version("jacoco") }
         project.file("consumer-proguard-rules.pro")
