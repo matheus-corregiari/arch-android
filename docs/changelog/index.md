@@ -4,7 +4,7 @@ This directory keeps one factual page per released version.
 
 ## Releases
 
-- [1.2.2 (Unreleased)](1.2.2.md)
+- [1.2.2](1.2.2.md)
 - [1.2.1](1.2.1.md)
 - [1.2.0](1.2.0.md)
 
