@@ -1,6 +1,10 @@
 # Changelog
 
-This directory keeps one factual page per released version.
+This directory keeps release notes and explicitly marked planned versions.
+
+## Planned
+
+- [1.3.0](1.3.0.md)
 
 ## Releases
 
