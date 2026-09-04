@@ -17,7 +17,7 @@ jetbrains-kover = "0.9.9"
 jetbrains-coroutines = "1.11.0"
 
 ## AndroidX
-androidx-plugin = "9.3.2"
+androidx-plugin = "9.4.0"
 
 ## Tools
 ktlint = "14.2.0"
@@ -35,16 +35,16 @@ jetbrains-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.r
 
 ## Androidx
 androidx-library = { module = "com.android.kotlin.multiplatform.library:com.android.kotlin.multiplatform.library.gradle.plugin", version.ref = "androidx-plugin" }
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.8.0" }
 androidx-recycler = { module = "androidx.recyclerview:recyclerview", version = "1.4.0" }
 androidx-window = { module = "androidx.window:window", version = "1.5.1" }
 androidx-security = { module = "androidx.security:security-crypto-ktx", version = "1.1.0" }
 androidx-startup = { module = "androidx.startup:startup-runtime", version = "1.2.0" }
-androidx-constraint = { module = "androidx.constraintlayout:constraintlayout", version = "2.2.1" }
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version = "2.10.0" }
+androidx-constraint = { module = "androidx.constraintlayout:constraintlayout", version = "2.2.2" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version = "2.11.0" }
 
 ## Arch Toolkit
-arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.2.0" }
+arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.3.0" }
 
 ## Tools
 detekt = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
@@ -60,7 +60,6 @@ mockk-test-agent = { module = "io.mockk:mockk", version = "1.14.11" }
 # ------------------------------------------------------------------------------------------------ #
 [plugins]
 jetbrains-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "jetbrains-kotlin" }
-jetbrains-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "jetbrains-kover" }
 vanniktech-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-publish" }
 
 # ------------------------------------------------------------------------------------------------ #
