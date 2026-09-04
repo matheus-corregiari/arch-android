@@ -17,3 +17,5 @@
 .externalNativeBuild
 # Added by code-review-graph
 .code-review-graph/
+
+.github/scripts/__pycache__/
