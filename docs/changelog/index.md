@@ -4,6 +4,7 @@ This directory keeps release notes and explicitly marked planned versions.
 
 ## Planned
 
+- [1.3.1](1.3.1.md)
 - [1.3.0](1.3.0.md)
 
 ## Releases
