@@ -121,4 +121,4 @@ Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 [badge-release]: https://img.shields.io/github/v/release/matheus-corregiari/arch-android
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
 [badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6
-[badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/lint.yml/badge.svg
+[badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/ci.yml/badge.svg

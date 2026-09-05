@@ -1,0 +1,4 @@
+{
+  "runner": "ubuntu-latest",
+  "codeql_kotlin": "2.3.21"
+}
