@@ -79,6 +79,38 @@ class CoreStorageUtilTest {
     }
 
     @Test
+    fun regularSharedPreferences_recreationPreservesValuesAndRegexRemoval() {
+        val context = RuntimeEnvironment.getApplication() as Application
+        val original = SharedPrefStorage.Regular(context, "recreation")
+        original["user_name"] = "Arch"
+        original["session"] = "active"
+
+        val reopened = SharedPrefStorage.Regular(context, "recreation")
+        assertEquals("Arch", reopened.get("user_name", "fallback"))
+        assertEquals("fallback", reopened.get("missing", "fallback"))
+        assertFalse(reopened.contains("missing"))
+        reopened.remove(Regex("user_.*"))
+        assertEquals(listOf("session"), reopened.keys())
+
+        val restored = SharedPrefStorage.Regular(context, "recreation")
+        assertNull(restored.get<String>("user_name"))
+        assertEquals("active", restored.get<String>("session"))
+    }
+
+    @Test
+    fun regularSharedPreferences_blankValuesRemovePersistedEntries() {
+        val context = RuntimeEnvironment.getApplication() as Application
+        val storage = SharedPrefStorage.Regular(context, "blank-values")
+
+        listOf("", "   ", "null").forEach { blank ->
+            storage["value"] = "saved"
+            storage["value"] = blank
+            assertFalse(storage.contains("value"))
+            assertNull(SharedPrefStorage.Regular(context, "blank-values").get<String>("value"))
+        }
+    }
+
+    @Test
     fun storageSettings_updatesAllConfigurableDefaults() {
         val storage = MemoryStorage("custom")
         val parser = object : ComplexDataParser {
