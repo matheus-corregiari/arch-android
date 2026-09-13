@@ -2,7 +2,7 @@
 [versions]
 ## --- Plugins and more general stuff --- ##
 #noinspection UnusedVersionCatalogEntry
-jacoco = "0.8.14"
+jacoco = "0.8.15"
 detekt = "2.0.0-alpha.6"
 
 ## --- Build Config and SDK --- ##
@@ -11,7 +11,7 @@ build-sdk-compile = "37"
 build-tools = "37.0.0"
 
 ## JetBrains
-jetbrains-kotlin = "2.4.10"
+jetbrains-kotlin = "2.4.20"
 jetbrains-dokka = "2.2.0"
 jetbrains-kover = "0.9.9"
 jetbrains-coroutines = "1.11.0"
@@ -44,7 +44,7 @@ androidx-constraint = { module = "androidx.constraintlayout:constraintlayout", v
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version = "2.11.0" }
 
 ## Arch Toolkit
-arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.3.1" }
+arch-lumber = { module = "io.github.matheus-corregiari:arch-lumber", version = "1.4.0" }
 
 ## Tools
 detekt = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
@@ -53,7 +53,7 @@ vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", ve
 
 ## Test
 junit-test = { module = "junit:junit", version = "4.13.2" }
-robolectric-test = { module = "org.robolectric:robolectric", version = "4.16.1" }
+robolectric-test = { module = "org.robolectric:robolectric", version = "4.17" }
 mockk-test-android = { module = "io.mockk:mockk-android", version = "1.14.11" }
 mockk-test-agent = { module = "io.mockk:mockk", version = "1.14.11" }
 
