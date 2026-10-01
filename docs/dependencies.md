@@ -7,8 +7,7 @@ The Android defaults live in `build-logic/src/main/kotlin/arch-multi-library.gra
 This KMP library has no application `targetSdk`; consuming apps choose their target API.
 Gradle **9.8.0**, JDK **21**, Kover **0.9.11**, MkDocs Material **9.7.7**.
 
-A Git tag does not guarantee Maven availability: Arch Lumber currently resolves to **1.4.0** in Maven Central.
-The patches in sibling repositories can be adopted after their artifacts are published.
+Storage diagnostics use Android's `android.util.Log`; this library does not depend on Arch Lumber.
 
 | Alias | Version | Source |
 | --- | --- | --- |
@@ -26,7 +25,6 @@ The patches in sibling repositories can be adopted after their artifacts are pub
 | `androidx-startup` | `1.2.0` | [Metadata](https://dl.google.com/dl/android/maven2/androidx/startup/startup-runtime/maven-metadata.xml) |
 | `androidx-constraint` | `2.2.2` | [Metadata](https://dl.google.com/dl/android/maven2/androidx/constraintlayout/constraintlayout/maven-metadata.xml) |
 | `androidx-lifecycle-runtime` | `2.11.0` | [Metadata](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime/maven-metadata.xml) |
-| `arch-lumber` | `1.4.0` | [Metadata](https://repo.maven.apache.org/maven2/io/github/matheus-corregiari/arch-lumber/maven-metadata.xml) |
 | `detekt` | `2.0.0-alpha.6` | [Metadata](https://repo.maven.apache.org/maven2/dev/detekt/detekt-gradle-plugin/maven-metadata.xml) |
 | `ktlint` | `14.2.0` | [Metadata](https://plugins.gradle.org/m2/org/jlleitschuh/gradle/ktlint/org.jlleitschuh.gradle.ktlint.gradle.plugin/maven-metadata.xml) |
 | `vanniktech-publish` | `0.37.0` | [Metadata](https://repo.maven.apache.org/maven2/com/vanniktech/gradle-maven-publish-plugin/maven-metadata.xml) |

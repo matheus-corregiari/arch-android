@@ -23,7 +23,6 @@ kotlin {
             implementation(libs.androidx.startup)
             implementation(libs.androidx.window)
             implementation(libs.androidx.lifecycle.runtime)
-            implementation(libs.arch.lumber)
         }
         androidHostTest.dependencies {
             implementation(libs.robolectric.test)

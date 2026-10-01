@@ -4,13 +4,13 @@ package br.com.arch.toolkit.android.storage.keyValue
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import br.com.arch.toolkit.android.storage.StorageType
 import br.com.arch.toolkit.android.util.edit
 import br.com.arch.toolkit.android.util.get
 import br.com.arch.toolkit.android.util.set
-import br.com.arch.toolkit.lumber.Lumber
 
 /**
  * An implementation of [KeyValueStorage] that uses [SharedPreferences] for persistence.
@@ -120,10 +120,10 @@ sealed class SharedPrefStorage(
     override fun keys(): List<String> = sharedPref.all.keys.toList()
 
     private fun log(error: Throwable, message: String) {
-        Lumber.tag("[Storage $name]").error(error, message)
+        Log.e("[Storage $name]", message, error)
     }
 
     private fun log(message: String) {
-        Lumber.tag("[Storage $name]").info(message)
+        Log.i("[Storage $name]", message)
     }
 }
