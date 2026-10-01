@@ -12,9 +12,11 @@ A Kotlin-first Android toolkit with APIs designed for Android source sets in KMP
 ## Requirements
 
 - Kotlin `2.4.20`
-- Gradle wrapper `9.7.1`
+- Gradle wrapper `9.8.0`
 - JDK `21` via the Gradle toolchain
-- Android `minSdk 20` and `compileSdk 37`
+- Android `minSdk 20` and `compileSdk 37.2`
+- AGP `9.4.1` and Build Tools `37.0.0` for building the repository
+- Application `targetSdk` is selected by the consuming app
 - Use the project wrapper instead of a local Gradle install
 
 ## Features
@@ -101,7 +103,7 @@ val enabled = darkMode.get()
 | Tool | Version |
 |:-----|:--------|
 | Kotlin | `2.4.20` |
-| Gradle | `9.7.1` |
+| Gradle | `9.8.0` |
 | Java | `21` |
 
 ## Documentation

@@ -19,3 +19,9 @@ and ViewModels.
 
 The adapter APIs provide reusable binders, item diffing, and sticky-header support without
 requiring an application-specific base adapter.
+
+## Expiring values
+
+`ThresholdData` scopes a cached value by storage and key. Expiration uses
+`kotlin.time.TimeSource.Monotonic`, so clock corrections cannot extend or shorten its lifetime.
+Durations retain submillisecond precision; a negative duration expires immediately.

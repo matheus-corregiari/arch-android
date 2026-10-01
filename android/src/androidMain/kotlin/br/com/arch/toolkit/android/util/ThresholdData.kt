@@ -1,6 +1,7 @@
 package br.com.arch.toolkit.android.util
 
 import kotlin.time.Duration
+import kotlin.time.TimeSource
 
 /**
  * Keeps a single value in memory and automatically invalidates it after [duration].
@@ -8,6 +9,7 @@ import kotlin.time.Duration
  * The cache entry is scoped by both `storageName` and `name`. A `get` call with a different
  * scope clears the entry and returns `null`.
  *
+ * Expiration uses Kotlin's monotonic clock, so wall-clock adjustments do not affect the cache.
  * This utility is platform-agnostic and can be reused from KMP shared logic.
  */
 class ThresholdData<T>(private val duration: Duration) {
@@ -15,7 +17,7 @@ class ThresholdData<T>(private val duration: Duration) {
     private var storageName: String? = null
     private var data: T? = null
     private var name: String? = null
-    private var timestamp: Long? = null
+    private var timestamp: TimeSource.Monotonic.ValueTimeMark? = null
 
     /**
      * Returns `true` when the cached value is missing or older than [duration].
@@ -28,7 +30,7 @@ class ThresholdData<T>(private val duration: Duration) {
                 name != null &&
                 lastTimestamp != null
         return !isComplete ||
-            System.currentTimeMillis() - checkNotNull(lastTimestamp) > duration.inWholeMilliseconds
+            checkNotNull(lastTimestamp).elapsedNow() > duration
     }
 
     /**
@@ -65,7 +67,7 @@ class ThresholdData<T>(private val duration: Duration) {
         this.storageName = storageName
         this.data = data
         this.name = name
-        this.timestamp = System.currentTimeMillis()
+        this.timestamp = TimeSource.Monotonic.markNow()
     }
 
     /** Clears all cached metadata and value. */

@@ -6,18 +6,15 @@ jacoco = "0.8.15"
 detekt = "2.0.0-alpha.6"
 
 ## --- Build Config and SDK --- ##
-build-sdk-min = "20"
-build-sdk-compile = "37"
-build-tools = "37.0.0"
 
 ## JetBrains
 jetbrains-kotlin = "2.4.20"
 jetbrains-dokka = "2.2.0"
-jetbrains-kover = "0.9.9"
+jetbrains-kover = "0.9.11"
 jetbrains-coroutines = "1.11.0"
 
 ## AndroidX
-androidx-plugin = "9.4.0"
+androidx-plugin = "9.4.1"
 
 ## Tools
 ktlint = "14.2.0"

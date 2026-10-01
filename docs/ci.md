@@ -1,6 +1,6 @@
 # CI and releases
 
-The CI workflows and commands are identical in Arch Lumber, Arch Android and Arch Event Observer.
+The repository uses shared convention plugins to select build, test and publication tasks.
 The convention plugins select module tasks; `build-logic/ci.json` selects the runner and the isolated
 CodeQL compiler. Coverage floors live in `gradle.properties` and must only increase as tests improve.
 
@@ -32,10 +32,8 @@ at `release/1.0.0`.
 | CodeQL | `./gradlew ciCodeql`: JVM/Android compilation; also analyzes Actions and Python |
 | CI Gate | Requires successful completion of every gate, including policy |
 
-`ciCoverage` already includes `ciTest`. There is no second test job. Projects with Apple targets use
-macOS for build/tests/publication; Android uses Linux. The same build job owns all supported targets,
-so JVM/Android/browser tests are not repeated on a second host. Windows local validation does not
-prove Apple binaries; the macOS CI run does.
+`ciCoverage` already includes `ciTest`. There is no second test job. This Android-only library
+builds and runs Android host tests on Linux; it has no Apple, JS or Wasm targets.
 
 CodeQL has a separate checkout and compiler configuration. Its outputs are never published. Coverage
 reports are uploaded as artifacts; Codecov receives master reports for visibility, while Gradle
@@ -112,8 +110,7 @@ An IDE coverage run or another coverage tool must use this Gradle report to shar
 Compare the same commit and line metric. Codecov's treatment of partially covered lines can differ
 from Kover, so equal file scope does not promise identical percentages. Existing Gradle verification
 rules remain authoritative; Codecov provides visibility rather than an additional threshold.
-JVM/Android host execution supplies the coverage counters. Apple, JS and Wasm tests still run in
-the platform test suite but do not add Kover coverage. On pushes to `master`, coverage is uploaded after the coverage job successfully builds and
+Android host execution supplies the coverage counters. On pushes to `master`, coverage is uploaded after the coverage job successfully builds and
 verifies the reports. Other CI gates run independently; all must pass before a release tag is created.
 
 References: [Kover report filtering](https://kotlin.github.io/kotlinx-kover/gradle-plugin/#filtering-reports),
@@ -122,3 +119,7 @@ References: [Kover report filtering](https://kotlin.github.io/kotlinx-kover/grad
 
 Release notes use `docs/changelog/<version>.md` from the verified tag checkout, with generated
 GitHub notes as a fallback for historical tags without a page.
+
+Detekt scans Kotlin files in all KMP source sets under `src`. The Android module applies
+`arch-coverage` explicitly; Kover and JaCoCo configuration is independent of Dokka.
+Kotlin compilation enables progressive mode to apply current compiler fixes.

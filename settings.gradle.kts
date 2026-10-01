@@ -2,6 +2,7 @@
 
 pluginManagement {
     apply(from = "$rootDir/gradle/repositories.gradle.kts")
+    @Suppress("UNCHECKED_CAST")
     val repositoryList = extra["repositoryList"] as RepositoryHandler.() -> Unit
     repositories(repositoryList)
     includeBuild("build-logic")
@@ -9,6 +10,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     apply(from = "$rootDir/gradle/repositories.gradle.kts")
+    @Suppress("UNCHECKED_CAST")
     val repositoryList = extra["repositoryList"] as RepositoryHandler.() -> Unit
     repositories(repositoryList)
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)

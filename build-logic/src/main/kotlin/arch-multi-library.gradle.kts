@@ -21,9 +21,17 @@ tasks.withType<Test>().configureEach {
 }
 
 extensions.configure<KotlinMultiplatformExtension> {
-    compilerOptions { jvmToolchain(projectJavaVersionCode) }
+    compilerOptions {
+        jvmToolchain(projectJavaVersionCode)
+        progressiveMode.set(true)
+    }
     withSourcesJar(true)
     android {
+        compileSdk {
+            version = release(37) { minorApiLevel = 2 }
+        }
+        minSdk = 20
+        buildToolsVersion = "37.0.0"
         namespace = "br.com.arch.toolkit.${project.name}"
         testNamespace = "test.$namespace"
         androidResources { enable = true }

@@ -7,9 +7,9 @@ in Arch Toolkit.
 
 ## Shared Links
 
-- [Ecosystem Gitflow](https://matheus-corregiari.github.io/arch-toolkit/ecosystem/gitflow/)
-- [Arch Toolkit sample hub](https://matheus-corregiari.github.io/arch-toolkit/sample/)
-- [Arch Toolkit web sample](https://matheus-corregiari.github.io/arch-toolkit/samples/web/)
+- [Ecosystem Gitflow](https://github.com/matheus-corregiari/arch-toolkit/blob/master/docs/ecosystem/gitflow.md)
+- [Arch Toolkit sample hub](https://github.com/matheus-corregiari/arch-toolkit/tree/master/sample)
+- [Arch Toolkit web sample sources](https://github.com/matheus-corregiari/arch-toolkit/tree/master/sample/target/web)
 
 Use the local docs for this library's API and behavior. Use the ecosystem hub for release flow,
 cross-library standards, and sample coverage across the Arch libraries.
