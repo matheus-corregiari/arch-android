@@ -51,9 +51,11 @@ the merged PR, fetches remote tags again, and creates an annotated tag on that e
 GitHub App sends the tag so its push triggers `release.yml`. Pages deploys the already-built site.
 
 The tag workflow requires the annotated remote tag, a matching merged PR, master ancestry and a
-successful master CI run for the exact SHA. It publishes using the tag's exact version, first to Maven
-Central and then to GitHub Packages, from a single host. It confirms publication coordinates before
-creating the GitHub Release. No additional test/lint/coverage suite runs for the tag; native publication
+successful required gates in master CI for the exact SHA. It publishes using the tag's exact version, first to Maven
+Central and then to GitHub Packages, from a single host. Maven Central deployments explicitly use
+`DeploymentValidation.VALIDATED`; successful publication tasks in both registries allow the GitHub
+Release to be created without waiting for public download availability or search indexing.
+Artifacts may become downloadable from Central after the GitHub Release is visible. No additional test/lint/coverage suite runs for the tag; native publication
 tasks may compile/package their dependencies, reusing available Gradle outputs.
 
 Tags and publication are serialized without canceling active releases. GitHub may replace a pending
@@ -61,11 +63,17 @@ run if several releases arrive together; resume the affected run explicitly and 
 Queue order is not a version reservation. Never move, overwrite or delete an existing release tag to
 recover a publication failure.
 
+Release verification requires the exact CodeQL matrix gates (`CodeQL (actions)`,
+`CodeQL (java-kotlin)`, `CodeQL (python)`), `CodeQL Policy` and `Create Release Tag`,
+along with build, coverage, static analysis, docs, release policy and CI Gate.
+Missing or pending gates wait; failed, cancelled, timed-out or skipped gates reject publication.
+
 ## Recovery
 
 Use the Release workflow's manual dispatch with the existing tag and destination `central`, `github`,
 `both`, or `release-only`. Skipped destinations must already contain every publication's POM; the
-workflow verifies this before proceeding and checks both registries before creating the GitHub Release.
+workflow verifies this before proceeding. These HTTP checks apply only to destinations omitted
+during manual recovery. `release-only` checks both existing registries and skips uploads.
 If Central is still processing a deployment, wait for that deployment rather than uploading it again.
 Selecting `both` is only appropriate when neither destination has accepted the release.
 
