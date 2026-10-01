@@ -7,7 +7,7 @@ The Android defaults live in `build-logic/src/main/kotlin/arch-multi-library.gra
 This KMP library has no application `targetSdk`; consuming apps choose their target API.
 Gradle **9.8.0**, JDK **21**, Kover **0.9.11**, MkDocs Material **9.7.7**.
 
-Storage diagnostics use Android's `android.util.Log`; this library does not depend on Arch Lumber.
+This library does not depend on Arch Lumber and does not emit storage or delegate logs.
 
 | Alias | Version | Source |
 | --- | --- | --- |
