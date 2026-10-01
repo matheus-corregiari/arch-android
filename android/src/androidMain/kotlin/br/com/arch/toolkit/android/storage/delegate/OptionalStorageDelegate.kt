@@ -39,9 +39,7 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
         val name = name.get() ?: return null
         val storage = storage.get() ?: return null
 
-        return lastAccess.get(storage.name, name)?.also {
-            log("[Storage] Get key value storage from threshold: $name -> $it")
-        } ?: storage.runCatching {
+        return lastAccess.get(storage.name, name) ?: storage.runCatching {
             when {
                 /* If it is Int, Long, Double, Float, String or Boolean */
                 classToParse.isPrimitiveForSharedPref() -> get(name)
@@ -70,10 +68,6 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
                     parser.fromJson(json, classToParse)
                 }
             }
-        }.onSuccess {
-            log("[Storage] Get key value storage: $name -> $it")
-        }.onFailure {
-            it.log("[Storage] Failed to get key value storage: $name")
         }.getOrNull()?.also { lastAccess.set(storage.name, name, it) }
     }
 
@@ -91,9 +85,6 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
                     remove(name)
                 }.onSuccess {
                     lastAccess.clear()
-                    log("[Storage] Removed key value storage: $name")
-                }.onFailure {
-                    it.log("[Storage] Failed to remove key value storage: $name")
                 }
             }
 
@@ -117,9 +108,6 @@ data class OptionalStorageDelegate<T : Any> internal constructor(
                     }
                 }.onSuccess {
                     lastAccess.set(storage.name, name, value)
-                    log("[Storage] Set key value storage: $name -> $value")
-                }.onFailure {
-                    it.log("[Storage] Failed to set key value storage: $name -> $value")
                 }
             }
         }

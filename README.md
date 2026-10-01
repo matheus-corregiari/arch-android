@@ -11,10 +11,12 @@ A Kotlin-first Android toolkit with APIs designed for Android source sets in KMP
 
 ## Requirements
 
-- Kotlin `2.4.10`
-- Gradle wrapper `9.7.1`
+- Kotlin `2.4.20`
+- Gradle wrapper `9.8.0`
 - JDK `21` via the Gradle toolchain
-- Android `minSdk 20` and `compileSdk 37`
+- Android `minSdk 20` and `compileSdk 37.2`
+- AGP `9.4.1` and Build Tools `37.0.0` for building the repository
+- Application `targetSdk` is selected by the consuming app
 - Use the project wrapper instead of a local Gradle install
 
 ## Features
@@ -100,8 +102,8 @@ val enabled = darkMode.get()
 
 | Tool | Version |
 |:-----|:--------|
-| Kotlin | `2.4.10` |
-| Gradle | `9.7.1` |
+| Kotlin | `2.4.20` |
+| Gradle | `9.8.0` |
 | Java | `21` |
 
 ## Documentation
@@ -116,9 +118,14 @@ Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 [link-maven]: https://central.sonatype.com/artifact/io.github.matheus-corregiari/arch-android
 [link-release]: https://github.com/matheus-corregiari/arch-android/releases/latest
 
-[badge-kotlin]: https://img.shields.io/badge/kotlin-2.4.10-blue.svg?logo=kotlin
+[badge-kotlin]: https://img.shields.io/badge/kotlin-2.4.20-blue.svg?logo=kotlin
 [badge-maven]: https://img.shields.io/maven-central/v/io.github.matheus-corregiari/arch-android.svg
 [badge-release]: https://img.shields.io/github/v/release/matheus-corregiari/arch-android
 [badge-license]: https://img.shields.io/github/license/matheus-corregiari/arch-android
 [badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6
 [badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/ci.yml/badge.svg
+
+## Next release: 1.3.2
+
+See [release notes](docs/changelog/1.3.2.md), [dependency versions](docs/dependencies.md) and
+[coverage configuration](docs/ci.md#coverage-and-codecov). This release is a candidate until tagged and published.

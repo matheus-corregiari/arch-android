@@ -10,7 +10,6 @@ import br.com.arch.toolkit.android.storage.StorageType
 import br.com.arch.toolkit.android.util.edit
 import br.com.arch.toolkit.android.util.get
 import br.com.arch.toolkit.android.util.set
-import br.com.arch.toolkit.lumber.Lumber
 
 /**
  * An implementation of [KeyValueStorage] that uses [SharedPreferences] for persistence.
@@ -27,10 +26,6 @@ sealed class SharedPrefStorage(
 
     private val lock = Any()
     private val mirageStorage: KeyValueStorage by lazy { MemoryStorage(name) }
-
-    init {
-        sharedPref.registerOnSharedPreferenceChangeListener { _, key -> log("Key $key changed") }
-    }
 
     /**
      * A regular, non-encrypted [SharedPrefStorage].
@@ -61,12 +56,7 @@ sealed class SharedPrefStorage(
     )
 
     override fun <T : Any> get(key: String): T? = synchronized(lock) {
-        mirageStorage[key] ?: runCatching { sharedPref.get<T>(key) }
-            .onFailure { log(it, "Failure getting key $key") }
-            .onSuccess {
-                log("Key $key retrieved")
-                mirageStorage[key] = it
-            }.getOrThrow()
+        mirageStorage[key] ?: sharedPref.get<T>(key).also { mirageStorage[key] = it }
     }
 
     override fun <T : Any> set(key: String, value: T?) = when {
@@ -81,36 +71,21 @@ sealed class SharedPrefStorage(
 
         /* If reaches here, the Key and the Value are good to go! */
         else -> synchronized(lock) {
-            runCatching {
-                sharedPref[key] = value
-            }.onFailure {
-                log(it, "Failure setting key $key to $value")
-            }.onSuccess {
-                log("Key $key set to $value")
-                mirageStorage[key] = value
-            }.getOrThrow()
+            sharedPref[key] = value
+            mirageStorage[key] = value
         }
     }
 
     override fun remove(key: String) = synchronized(lock) {
-        runCatching {
-            if (contains(key)) {
-                sharedPref.edit { remove(key) }
-                log("Key $key removed")
-            }
-        }.onFailure { log(it, "Failure removing key $key") }
-            .onSuccess { mirageStorage.remove(key) }
-            .getOrThrow()
+        if (contains(key)) {
+            sharedPref.edit { remove(key) }
+        }
+        mirageStorage.remove(key)
     }
 
     override fun clear() = synchronized(lock) {
-        runCatching {
-            sharedPref.edit { clear() }
-        }.onFailure { log(it, "Failure clearing storage $name") }
-            .onSuccess {
-                log("Storage $name cleared")
-                mirageStorage.clear()
-            }.getOrThrow()
+        sharedPref.edit { clear() }
+        mirageStorage.clear()
     }
 
     override fun contains(key: String): Boolean = run { sharedPref.contains(key) }
@@ -118,12 +93,4 @@ sealed class SharedPrefStorage(
     override fun size(): Int = sharedPref.all.count()
 
     override fun keys(): List<String> = sharedPref.all.keys.toList()
-
-    private fun log(error: Throwable, message: String) {
-        Lumber.tag("[Storage $name]").error(error, message)
-    }
-
-    private fun log(message: String) {
-        Lumber.tag("[Storage $name]").info(message)
-    }
 }

@@ -1,6 +1,6 @@
 # CI and releases
 
-The CI workflows and commands are identical in Arch Lumber, Arch Android and Arch Event Observer.
+The repository uses shared convention plugins to select build, test and publication tasks.
 The convention plugins select module tasks; `build-logic/ci.json` selects the runner and the isolated
 CodeQL compiler. Coverage floors live in `gradle.properties` and must only increase as tests improve.
 
@@ -32,10 +32,8 @@ at `release/1.0.0`.
 | CodeQL | `./gradlew ciCodeql`: JVM/Android compilation; also analyzes Actions and Python |
 | CI Gate | Requires successful completion of every gate, including policy |
 
-`ciCoverage` already includes `ciTest`. There is no second test job. Projects with Apple targets use
-macOS for build/tests/publication; Android uses Linux. The same build job owns all supported targets,
-so JVM/Android/browser tests are not repeated on a second host. Windows local validation does not
-prove Apple binaries; the macOS CI run does.
+`ciCoverage` already includes `ciTest`. There is no second test job. This Android-only library
+builds and runs Android host tests on Linux; it has no Apple, JS or Wasm targets.
 
 CodeQL has a separate checkout and compiler configuration. Its outputs are never published. Coverage
 reports are uploaded as artifacts; Codecov receives master reports for visibility, while Gradle
@@ -53,9 +51,11 @@ the merged PR, fetches remote tags again, and creates an annotated tag on that e
 GitHub App sends the tag so its push triggers `release.yml`. Pages deploys the already-built site.
 
 The tag workflow requires the annotated remote tag, a matching merged PR, master ancestry and a
-successful master CI run for the exact SHA. It publishes using the tag's exact version, first to Maven
-Central and then to GitHub Packages, from a single host. It confirms publication coordinates before
-creating the GitHub Release. No additional test/lint/coverage suite runs for the tag; native publication
+successful required gates in master CI for the exact SHA. It publishes using the tag's exact version, first to Maven
+Central and then to GitHub Packages, from a single host. Maven Central deployments explicitly use
+`DeploymentValidation.VALIDATED`; successful publication tasks in both registries allow the GitHub
+Release to be created without waiting for public download availability or search indexing.
+Artifacts may become downloadable from Central after the GitHub Release is visible. No additional test/lint/coverage suite runs for the tag; native publication
 tasks may compile/package their dependencies, reusing available Gradle outputs.
 
 Tags and publication are serialized without canceling active releases. GitHub may replace a pending
@@ -63,11 +63,17 @@ run if several releases arrive together; resume the affected run explicitly and 
 Queue order is not a version reservation. Never move, overwrite or delete an existing release tag to
 recover a publication failure.
 
+Release verification requires the exact CodeQL matrix gates (`CodeQL (actions)`,
+`CodeQL (java-kotlin)`, `CodeQL (python)`), `CodeQL Policy` and `Create Release Tag`,
+along with build, coverage, static analysis, docs, release policy and CI Gate.
+Missing or pending gates wait; failed, cancelled, timed-out or skipped gates reject publication.
+
 ## Recovery
 
 Use the Release workflow's manual dispatch with the existing tag and destination `central`, `github`,
 `both`, or `release-only`. Skipped destinations must already contain every publication's POM; the
-workflow verifies this before proceeding and checks both registries before creating the GitHub Release.
+workflow verifies this before proceeding. These HTTP checks apply only to destinations omitted
+during manual recovery. `release-only` checks both existing registries and skips uploads.
 If Central is still processing a deployment, wait for that deployment rather than uploading it again.
 Selecting `both` is only appropriate when neither destination has accepted the release.
 
@@ -88,3 +94,40 @@ python -m mkdocs build --strict
 
 Use JDK 21 and the project wrapper. Publication also has `ciPublicationManifest` for verifying the
 complete list of Maven coordinates, without uploading packages.
+
+## Coverage and Codecov
+
+`build-logic/src/main/kotlin/arch-coverage.gradle.kts` is the single source of report exclusions. It applies the same Kover filter
+to every covered module and the root report. Only Android-generated `*.BuildConfig`, `*.R`
+and `*.R$*` are excluded: they contain generated constants/resources, not application behavior.
+Do not exclude DTOs, state classes, Compose functions or entire packages just to raise coverage.
+
+```sh
+./gradlew ciCoverage
+# Root report only (automatically runs the required JVM/Android host tests):
+./gradlew :koverXmlReport :koverHtmlReport :koverVerify
+```
+
+Open `build/reports/kover/html/index.html` locally. Codecov receives only
+`build/reports/kover/report.xml`, with `disable_search: true`; automatic discovery would also find
+module or older reports and could merge excluded classes back into the result.
+There is deliberately no second `ignore` list in `codecov.yml`: Codecov consumes the already-filtered
+XML. Its `ignore` patterns describe source paths, while Kover filters describe JVM class names.
+An IDE coverage run or another coverage tool must use this Gradle report to share these exclusions.
+
+Compare the same commit and line metric. Codecov's treatment of partially covered lines can differ
+from Kover, so equal file scope does not promise identical percentages. Existing Gradle verification
+rules remain authoritative; Codecov provides visibility rather than an additional threshold.
+Android host execution supplies the coverage counters. On pushes to `master`, coverage is uploaded after the coverage job successfully builds and
+verifies the reports. Other CI gates run independently; all must pass before a release tag is created.
+
+References: [Kover report filtering](https://kotlin.github.io/kotlinx-kover/gradle-plugin/#filtering-reports),
+[Codecov file search](https://docs.codecov.com/docs/file-search) and
+[Codecov path ignores](https://docs.codecov.com/docs/ignoring-paths).
+
+Release notes use `docs/changelog/<version>.md` from the verified tag checkout, with generated
+GitHub notes as a fallback for historical tags without a page.
+
+Detekt scans Kotlin files in all KMP source sets under `src`. The Android module applies
+`arch-coverage` explicitly; Kover and JaCoCo configuration is independent of Dokka.
+Kotlin compilation enables progressive mode to apply current compiler fixes.

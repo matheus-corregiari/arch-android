@@ -7,6 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.nanoseconds
 
 @RunWith(RobolectricTestRunner::class)
 class ThresholdDataTest {
@@ -46,6 +47,16 @@ class ThresholdDataTest {
 
         cache.set("storage", "token", "abc")
 
+        assertNull(cache.get("storage", "token"))
+    }
+
+    @Test
+    fun get_withNegativeSubMillisecondDuration_shouldExpireImmediately() {
+        val cache = ThresholdData<String>((-1).nanoseconds)
+
+        cache.set("storage", "token", "abc")
+
+        assertTrue(cache.isExpired())
         assertNull(cache.get("storage", "token"))
     }
 
