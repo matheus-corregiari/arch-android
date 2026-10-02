@@ -26,7 +26,12 @@ A Kotlin-first Android toolkit with APIs designed for Android source sets in KMP
 - Property delegates for persisted values, extras, views, and ViewModels.
 - RecyclerView adapters, binders, and sticky headers.
 - Foldable layout helpers.
-- Application context provider.
+- Weak context provider tracking created/resumed Activities.
+
+Use this toolkit in Android UI/source sets. Keep Views screens on Views; Compose screens can
+render their own state and lists. For preferences shared across KMP targets, evaluate
+[Arch Storage](https://github.com/matheus-corregiari/arch-storage).
+See the [consumer guide](docs/consumer-guide.md) for ownership and concrete storage criteria.
 
 ## Installation
 
@@ -50,7 +55,8 @@ dependencies {
 
 ## Usage
 
-Initialize storage and the context provider from the application:
+AndroidX Startup initializes storage and the context provider through the merged manifest.
+If your app disables those initializers, initialize the needed features once from the application:
 
 ```kotlin
 class App : Application() {
@@ -109,6 +115,8 @@ val enabled = darkMode.get()
 ## Documentation
 
 Project guides and API documentation are published through GitHub Pages.
+Start with the [consumer guide](docs/consumer-guide.md) and
+[tested recipes for lifecycle, state, lists and preferences](docs/recipes.md).
 See [CONTRIBUTING](CONTRIBUTING.md) for the local workflow.
 
 ## License
@@ -125,7 +133,7 @@ Licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 [badge-coverage]: https://codecov.io/gh/matheus-corregiari/arch-android/graph/badge.svg?token=146UU167K6
 [badge-lint]: https://github.com/matheus-corregiari/arch-android/actions/workflows/ci.yml/badge.svg
 
-## Next release: 1.3.2
+## Next release: 1.4.0
 
-See [release notes](docs/changelog/1.3.2.md), [dependency versions](docs/dependencies.md) and
+See [release notes](docs/changelog/1.4.0.md), [dependency versions](docs/dependencies.md) and
 [coverage configuration](docs/ci.md#coverage-and-codecov). This release is a candidate until tagged and published.
