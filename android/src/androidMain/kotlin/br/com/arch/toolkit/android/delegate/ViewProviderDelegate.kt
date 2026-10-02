@@ -42,7 +42,7 @@ class ViewProviderDelegate<out T> internal constructor(
         view?.let { if (!it.isAttachedToWindow) view = null }
         return findView(property) {
             if (parentRes != NO_ID) {
-                thisRef.findViewById<View>(parentRes).findViewById(idRes)
+                thisRef.findViewById<View>(parentRes)?.findViewById(idRes)
             } else {
                 thisRef.findViewById(idRes)
             }
@@ -62,7 +62,7 @@ class ViewProviderDelegate<out T> internal constructor(
 
     operator fun getValue(thisRef: View, property: KProperty<*>): T = findView(property) {
         if (parentRes != NO_ID) {
-            thisRef.findViewById<View>(parentRes).findViewById(idRes)
+            thisRef.findViewById<View>(parentRes)?.findViewById(idRes)
         } else {
             thisRef.findViewById(idRes)
         }
@@ -87,7 +87,8 @@ class ViewProviderDelegate<out T> internal constructor(
 }
 
 /**
- * Creates a [ViewProviderDelegate] that expects the view to exist.
+ * Creates a [ViewProviderDelegate] that expects the view and any specified parent to exist.
+ * Missing views or parents produce an [IllegalStateException] with the property name.
  *
  * @param idRes The ID of the view.
  * @param parentRes Optional ID of a parent view.
@@ -105,7 +106,7 @@ fun <T : View> viewProvider(
 )
 
 /**
- * Creates a [ViewProviderDelegate] that returns null if the view is not found.
+ * Creates a [ViewProviderDelegate] that returns null if the view or specified parent is not found.
  *
  * @param idRes The ID of the view.
  * @param parentRes Optional ID of a parent view.
