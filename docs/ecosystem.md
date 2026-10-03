@@ -2,6 +2,9 @@
 
 Arch Android is part of the Arch library ecosystem.
 
+For Android SharedPreferences versus shared reactive preferences, see the
+[storage selection guide](consumer-guide.md#choose-storage-by-the-datas-owner).
+
 This repository owns Android-specific utilities. Ecosystem-level standards and shared samples live
 in Arch Toolkit.
 

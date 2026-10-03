@@ -17,9 +17,15 @@ In a KMP project, add the dependency to `androidMain`.
 
 ## Initialize
 
-Features that need an application context can be initialized from `Application.onCreate`:
+AndroidX Startup initializes `Storage.KeyValue` and `ContextProvider` through the library's
+merged manifest. If your app disables these initializers, initialize the needed features once
+from `Application.onCreate`:
 
 ```kotlin
 Storage.KeyValue.init(this)
 ContextProvider.init(this)
 ```
+
+An explicit `SharedPrefStorage.Regular(applicationContext, "settings")` backend needs no
+global storage initialization. Choose the appropriate utilities in the
+[consumer guide](consumer-guide.md) and start with [task recipes](recipes.md).

@@ -34,6 +34,10 @@ at `release/1.0.0`.
 
 `ciCoverage` already includes `ciTest`. There is no second test job. This Android-only library
 builds and runs Android host tests on Linux; it has no Apple, JS or Wasm targets.
+The [task recipes](recipes.md) are compiled in `androidHostTest` and exercised by
+`UsageRecipesTest`; the same source set is scanned by the existing lint gate.
+`test_recipes.py` runs with the existing Python checks and rejects recipe snippets that drift
+from their compiled implementations.
 
 CodeQL has a separate checkout and compiler configuration. Its outputs are never published. Coverage
 reports are uploaded as artifacts; Codecov receives master reports for visibility, while Gradle

@@ -1,5 +1,8 @@
 # Core Concepts
 
+For task ownership, lifecycle and Views/Compose/KMP choices, see the
+[consumer guide](consumer-guide.md). These utilities belong to Android source sets.
+
 ## State machines
 
 `StateMachine` coordinates state transitions. `ViewStateMachine` applies visibility and enabled
